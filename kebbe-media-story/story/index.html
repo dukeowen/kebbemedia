@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kebbe Media — Creative. Media. Production.</title>
+<meta name="description" content="Kebbe Media builds brands, creates content and produces experiences that people notice. Bahrain, Saudi Arabia, the GCC and beyond.">
+<meta name="theme-color" content="#11100e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e9a50b'/%3E%3Cg transform='translate(15 11) scale(.059)'%3E%3Cpath d='M0 0H140Q158 0 158 18V580H0Z' fill='%23fcf3d7'/%3E%3Cpath d='M158 15V405L338 690Q358 718 392 718H583Z' fill='%23f9df9f'/%3E%3Cpath d='M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="media/share.jpg">
+<!-- Link previews (WhatsApp, Instagram, LinkedIn, X). These assume the page lives at https://kebbemedia.com/story/ -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kebbe Media">
+<meta property="og:title" content="Kebbe Media — Creative. Media. Production.">
+<meta property="og:description" content="We build brands, create content and produce experiences that people notice. Watch the story.">
+<meta property="og:url" content="https://kebbemedia.com/story/">
+<meta property="og:image" content="https://kebbemedia.com/story/media/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kebbemedia.com/story/media/share.jpg">
+<style>html,body{margin:0;padding:0}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: a single 9:16 story frame. Full screen on phones; a centred phone-sized frame on a blurred
+   backdrop on larger screens. Every type size is in container units, so it scales with the frame.
+   Deliberately single-theme (dark stage, Kebbe gold), like the main site. */
+:root {
+  --ink: #11100e; --ink-2: #1b1916; --bone: #f5f0e7; --ash: #a0978a;
+  --gold: #e9a50b; --amber: #c08208; --gold-light: #f6d88c; --cream: #fcf3d7;
+  --line: rgba(245, 240, 231, .16);
+  --f-display: "Archivo", "Inter Display", "Arial Narrow", Arial, sans-serif;
+  --f-serif: "Instrument Serif", "Lora", Georgia, serif;
+  --f-mono: "IBM Plex Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+  --e: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--ink); color: var(--bone); font-family: var(--f-display); overflow: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+[hidden] { display: none !important; }
+.sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- stage ---------- */
+.stage { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; background: var(--ink); }
+.backdrop { position: absolute; inset: -60px; background: var(--ink) center / cover no-repeat; filter: blur(48px) saturate(1.1) brightness(.42); transform: scale(1.1); transition: background-image .8s, background-color .8s; }
+.story { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--ink); container-type: size; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+@media (min-width: 640px) and (min-height: 560px) {
+  .story { height: min(calc(100% - 40px), 940px); width: auto; aspect-ratio: 9 / 16; border-radius: 18px; box-shadow: 0 40px 120px rgba(0,0,0,.55), 0 0 0 1px rgba(245,240,231,.06); }
+}
+.story:focus { outline: none; }
+.side-nav { display: none; }
+@media (min-width: 900px) and (min-height: 560px) {
+  .side-nav { display: grid; position: absolute; top: 50%; translate: 0 -50%; width: 52px; height: 52px; border-radius: 50%; place-items: center; background: rgba(245,240,231,.08); border: 1px solid rgba(245,240,231,.14); z-index: 3; transition: background .3s, transform .4s var(--e); }
+  .side-nav:hover { background: rgba(233,165,11,.9); color: var(--ink); transform: scale(1.06); }
+  .side-nav--prev { left: calc(50% - (min(100vh - 40px, 940px) * 9 / 32) - 84px); }
+  .side-nav--next { right: calc(50% - (min(100vh - 40px, 940px) * 9 / 32) - 84px); }
+  .side-nav[disabled] { opacity: .25; pointer-events: none; }
+}
+
+/* ---------- chrome: progress, header, controls ---------- */
+.chrome { position: absolute; z-index: 20; left: 0; right: 0; top: 0; padding: calc(10px + env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px)); background: linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,0)); padding-bottom: 28px; pointer-events: none; }
+@media (min-width: 640px) and (min-height: 560px) { .chrome { padding-top: 12px; padding-left: 12px; padding-right: 12px; } }
+.bars { display: flex; gap: 3px; }
+.bars span { flex: 1; height: 2.5px; border-radius: 2px; background: rgba(245,240,231,.28); overflow: hidden; }
+.bars i { display: block; height: 100%; background: var(--bone); transform-origin: 0 50%; transform: scaleX(0); }
+.bars span.done i { transform: scaleX(1); }
+.head { display: flex; align-items: center; gap: 10px; margin-top: 10px; pointer-events: auto; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center; background: linear-gradient(225deg, #f6b20c, #c08208); box-shadow: 0 0 0 2px var(--ink), 0 0 0 3.5px var(--gold); }
+.avatar svg { height: 17px; width: auto; }
+.who { display: grid; line-height: 1.1; min-width: 0; }
+.who b { font-weight: 700; font-size: 13.5px; letter-spacing: -.01em; }
+.who span { font-family: var(--f-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: rgba(245,240,231,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ctrls { margin-left: auto; display: flex; gap: 6px; }
+.ctrl { height: 34px; min-width: 34px; padding: 0 10px; border-radius: 100px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; background: rgba(17,16,14,.42); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(245,240,231,.16); transition: background .3s, border-color .3s, color .3s; }
+.ctrl:hover { border-color: rgba(245,240,231,.4); }
+.ctrl svg { width: 16px; height: 16px; flex: none; }
+.ctrl .lbl { white-space: nowrap; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; }
+.ctrl--sound[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+.ctrl--sound .eq { display: none; gap: 2px; align-items: end; height: 12px; }
+.ctrl--sound[aria-pressed="true"] .eq { display: inline-flex; }
+.ctrl--sound[aria-pressed="true"] .ic-off { display: none; }
+.ctrl--sound[aria-pressed="false"] .ic-on { display: none; }
+.eq i { width: 2px; background: currentColor; border-radius: 1px; animation: eq 1s ease-in-out infinite; }
+.eq i:nth-child(1) { height: 5px; animation-delay: -.2s; } .eq i:nth-child(2) { height: 11px; animation-delay: -.5s; } .eq i:nth-child(3) { height: 7px; animation-delay: -.8s; }
+@keyframes eq { 50% { transform: scaleY(.35); } }
+.ctrl--pause .ic-play { display: none; }
+.is-paused .ctrl--pause .ic-play { display: block; }
+.is-paused .ctrl--pause .ic-pause { display: none; }
+.paused-tag { position: absolute; z-index: 21; left: 50%; top: 50%; translate: -50% -50%; font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; padding: 8px 14px; border-radius: 100px; background: rgba(17,16,14,.6); backdrop-filter: blur(8px); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.is-paused:not(.is-holding) .paused-tag { opacity: 1; }
+.is-holding .chrome { opacity: 0; transition: opacity .25s; }
+.sound-hint { position: absolute; z-index: 22; left: 50%; bottom: calc(5cqh + env(safe-area-inset-bottom, 0px)); translate: -50% 0; display: inline-flex; gap: 8px; align-items: center; font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; padding: 10px 16px; border-radius: 100px; background: var(--gold); color: var(--ink); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+
+/* ---------- slides ---------- */
+.slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .55s ease, visibility 0s .55s; overflow: hidden; }
+.slide.on { opacity: 1; visibility: visible; transition: opacity .55s ease; }
+.media { position: absolute; inset: 0; background: var(--ink-2); }
+.media img, .media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.media video { opacity: 0; transition: opacity .4s; }
+.media video.ready { opacity: 1; }
+.slide.on .media img, .slide.on .media video { animation: kb 9s linear both; }
+@keyframes kb { from { transform: scale(1.02); } to { transform: scale(1.09); } }
+.shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(17,16,14,.35) 0%, rgba(17,16,14,0) 22%, rgba(17,16,14,0) 42%, rgba(17,16,14,.92) 100%); }
+.shade--heavy { background: linear-gradient(180deg, rgba(17,16,14,.55) 0%, rgba(17,16,14,.5) 40%, rgba(17,16,14,.94) 100%); }
+.body { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 2.2cqh; padding: 16cqh 7cqw calc(7cqh + env(safe-area-inset-bottom, 0px)); }
+.body--top { justify-content: flex-start; padding-top: 17cqh; }
+.body--mid { justify-content: center; }
+.slide--gold { background: linear-gradient(200deg, #f6b20c 0%, #e3a00a 45%, #a96a08 100%); color: var(--ink); }
+.slide--dark { background: radial-gradient(120% 70% at 85% 0%, rgba(233,165,11,.16), rgba(17,16,14,0) 60%), var(--ink); }
+
+.kick { font-family: var(--f-mono); font-size: 3.1cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-light); display: flex; gap: 2.4cqw; align-items: center; }
+.slide--gold .kick { color: rgba(17,16,14,.72); }
+.kick::before { content: ""; width: 7cqw; height: 1px; background: currentColor; }
+.h { margin: 0; font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; line-height: .86; letter-spacing: -.01em; font-size: 13.4cqw; text-wrap: balance; }
+.h--xl { font-size: 20cqw; line-height: .8; }
+.h--m { font-size: 11cqw; }
+.h--s { font-size: 9.6cqw; }
+.serif { font-family: var(--f-serif); font-style: italic; font-weight: 400; text-transform: none; letter-spacing: -.02em; color: var(--gold); font-variation-settings: normal; }
+.slide--gold .serif { color: #fff8e4; }
+.p { margin: 0; font-family: var(--f-display); font-variation-settings: "wdth" 100; font-size: 4.3cqw; line-height: 1.4; max-width: 34ch; color: rgba(245,240,231,.9); }
+.p--lead { font-size: 5.1cqw; line-height: 1.3; color: var(--bone); }
+.slide--gold .p { color: rgba(17,16,14,.85); }
+.tags { font-family: var(--f-mono); font-size: 3cqw; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); line-height: 1.6; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1.6cqw; }
+.chips li { font-family: var(--f-mono); font-size: 3cqw; letter-spacing: .08em; text-transform: uppercase; padding: 1.4cqw 3cqw; border: 1px solid rgba(245,240,231,.3); border-radius: 100px; background: rgba(17,16,14,.28); }
+.slide--gold .chips li { border-color: rgba(17,16,14,.35); background: rgba(255,248,228,.16); }
+.note { font-family: var(--f-mono); font-size: 2.7cqw; letter-spacing: .1em; text-transform: uppercase; color: var(--ash); display: flex; gap: 2cqw; align-items: center; }
+.note::before { content: ""; width: 1.6cqw; height: 1.6cqw; border: 1px solid currentColor; transform: rotate(45deg); flex: none; }
+.big-num { font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; font-size: 40cqw; line-height: .75; color: transparent; -webkit-text-stroke: 1px rgba(233,165,11,.6); position: absolute; right: 5cqw; top: 13cqh; pointer-events: none; }
+
+/* entrance choreography: each .a enters in order (--d) when its slide is on */
+.slide .a { opacity: 0; transform: translate3d(0, 4cqh, 0); }
+.slide.on .a { animation: up .9s var(--e) forwards; animation-delay: calc(var(--d, 0) * 110ms + 180ms); }
+.slide .m { display: block; overflow: hidden; padding-bottom: .05em; margin-bottom: -.05em; }
+.slide .m > span { display: block; transform: translate3d(0, 105%, 0); }
+.cover .h, .slide .h { overflow-wrap: normal; word-break: normal; }
+.slide.on .m > span { animation: mask 1s var(--e) forwards; animation-delay: calc(var(--d, 0) * 110ms + 120ms); }
+@keyframes up { to { opacity: 1; transform: none; } }
+@keyframes mask { to { transform: none; } }
+
+/* pillars */
+.pillars { display: grid; grid-template-columns: minmax(0, 1fr); gap: .6cqh; }
+.pillars > *, .groups > *, .duo > *, .body > * { min-width: 0; }
+.pillars .h { font-size: 16cqw; line-height: .86; }
+.pillars .h:nth-child(even) { padding-left: 9cqw; }
+/* groups */
+.groups { display: grid; grid-template-columns: 1fr 1fr; gap: 4cqh 5cqw; }
+.groups h3 { margin: 0 0 1.2cqh; font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: 7cqw; line-height: .9; color: var(--gold); }
+.groups ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5cqh; }
+.groups li { font-variation-settings: "wdth" 100; font-size: 4cqw; line-height: 1.25; border-bottom: 1px solid var(--line); padding-bottom: .6cqh; }
+/* steps */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.4cqh; }
+.steps li { display: grid; grid-template-columns: 10cqw 1fr; gap: 1cqw 2cqw; border-top: 1px solid var(--line); padding-top: 1.6cqh; }
+.steps .n { font-family: var(--f-mono); font-size: 3.2cqw; color: var(--gold); padding-top: .4cqh; }
+.steps b { font-weight: 800; font-variation-settings: "wdth" 80; font-stretch: 80%; text-transform: uppercase; font-size: 5.6cqw; line-height: 1; }
+.steps .dsc { grid-column: 2; font-variation-settings: "wdth" 100; font-size: 3.7cqw; line-height: 1.35; color: var(--ash); }
+/* stats */
+.stats { display: flex; gap: 7cqw; }
+.stats div { display: grid; gap: .6cqh; }
+.stats b { font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; font-size: 15cqw; line-height: .85; color: var(--gold); }
+.stats span { font-family: var(--f-mono); font-size: 2.9cqw; letter-spacing: .12em; text-transform: uppercase; }
+/* more work */
+.duo { display: grid; gap: 3.4cqh; }
+.duo article { border-top: 1px solid var(--line); padding-top: 2cqh; display: grid; gap: 1.2cqh; }
+.duo h3 { margin: 0; font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: 10cqw; line-height: .88; }
+/* work placeholder card */
+.wcard { position: absolute; inset: 0; background: linear-gradient(200deg, #2a2116 0%, #17140f 55%, #11100e 100%); }
+.wcard svg { position: absolute; right: -8cqw; top: 14cqh; height: 52cqh; width: auto; opacity: .16; }
+/* trusted by */
+.names { position: relative; flex: 1; min-height: 0; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent); }
+.names ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .3cqh; }
+.slide.on .names ul { animation: roll var(--roll, 16s) linear both; }
+@keyframes roll { from { transform: translateY(8%); } to { transform: translateY(calc(-100% + 55cqh)); } }
+.names li { font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: 7.6cqw; line-height: 1.02; }
+.names li:nth-child(3n+2) { color: transparent; -webkit-text-stroke: 1px rgba(245,240,231,.6); }
+.names li:nth-child(3n) { color: var(--gold); }
+/* CTA */
+.cta { display: grid; gap: 1.6cqh; position: relative; z-index: 2; }
+.btn { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; min-height: 48px; padding: 2.1cqh 5cqw; border-radius: 100px; text-decoration: none; font-weight: 800; font-variation-settings: "wdth" 90; text-transform: uppercase; font-size: 4.4cqw; letter-spacing: .01em; transition: transform .4s var(--e), background .3s; }
+.btn--ink { background: var(--ink); color: var(--bone); }
+.btn--ink:hover { transform: translateX(1.5cqw); }
+.btn--line { border: 1.5px solid rgba(17,16,14,.6); color: var(--ink); }
+.btn--line:hover { background: rgba(17,16,14,.1); }
+.contacts { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqh 4cqw; margin-top: 1cqh; }
+.contacts div { display: grid; gap: .5cqh; min-width: 0; }
+.contacts small { font-family: var(--f-mono); font-size: 2.6cqw; letter-spacing: .14em; text-transform: uppercase; color: rgba(17,16,14,.65); }
+.contacts span, .contacts a { font-variation-settings: "wdth" 100; font-size: 3.9cqw; font-weight: 600; overflow-wrap: anywhere; user-select: text; -webkit-user-select: text; }
+.contacts a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(17,16,14,.4); }
+.replay { justify-self: start; font-family: var(--f-mono); font-size: 3cqw; letter-spacing: .14em; text-transform: uppercase; padding: 1.2cqh 0; color: rgba(17,16,14,.75); display: inline-flex; gap: 2cqw; align-items: center; }
+.replay:hover { color: var(--ink); }
+
+/* ---------- cover ---------- */
+.cover { position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end; gap: 2.6cqh; padding: 10cqh 7cqw calc(7cqh + env(safe-area-inset-bottom, 0px)); background: var(--ink); transition: opacity .6s ease, visibility 0s .6s; }
+.cover.gone { opacity: 0; visibility: hidden; }
+.cover__media { position: absolute; inset: 0; background: url("media/hero-tall.jpg") center / cover; filter: brightness(.55) saturate(1.05); }
+.cover__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(17,16,14,.1), rgba(17,16,14,.2) 35%, rgba(17,16,14,.96)); }
+.cover > :not(.cover__media) { position: relative; }
+.cover__k { height: 15cqh; width: auto; align-self: flex-start; margin-bottom: auto; margin-top: 4cqh; filter: drop-shadow(0 20px 40px rgba(0,0,0,.4)); }
+.cover__k .k-bar { fill: var(--cream); } .cover__k .k-leg { fill: var(--gold); opacity: .95; } .cover__k .k-band { fill: #fff; }
+.cover .h { font-size: 19cqw; }
+.cover__meta { font-family: var(--f-mono); font-size: 2.9cqw; letter-spacing: .12em; text-transform: uppercase; color: rgba(245,240,231,.7); }
+.cover__btns { display: grid; gap: 1.4cqh; margin-top: 1cqh; }
+.cover__btns .btn--gold { background: var(--gold); color: var(--ink); border: 0; }
+.cover__btns .btn--gold:hover { background: var(--gold-light); }
+.cover__btns .btn--ghost { border: 1.5px solid rgba(245,240,231,.4); color: var(--bone); }
+.cover__btns .btn--ghost:hover { background: rgba(245,240,231,.08); }
+.cover__btns svg { width: 5cqw; height: 5cqw; min-width: 18px; min-height: 18px; }
+.hint { font-family: var(--f-mono); font-size: 2.6cqw; letter-spacing: .1em; text-transform: uppercase; color: rgba(245,240,231,.55); text-align: center; }
+
+.kmark .k-bar { fill: var(--cream); } .kmark .k-leg { fill: #f9df9f; } .kmark .k-band { fill: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide .a, .slide .m > span { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .slide.on .media img, .slide.on .media video { animation: none; }
+  .slide.on .names ul { animation: none; }
+  .names { overflow-y: auto; }
+  .eq i { animation: none; }
+}
+</style>
+
+<div class="stage" id="stage">
+  <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+  <button class="side-nav side-nav--prev" id="sidePrev" aria-label="Previous story"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M11 3 5 9l6 6" stroke="currentColor" stroke-width="1.6"/></svg></button>
+
+  <main class="story" id="story" aria-roledescription="story" aria-label="Kebbe Media story">
+    <div class="chrome">
+      <div class="bars" id="bars" aria-hidden="true"></div>
+      <div class="head">
+        <span class="avatar" aria-hidden="true"><svg class="kmark" viewBox="0 0 584 718"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg></span>
+        <span class="who"><b>kebbemedia</b><span id="where">Creative. Media. Production.</span></span>
+        <span class="ctrls">
+          <button class="ctrl ctrl--pause" id="pauseBtn" aria-label="Pause story">
+            <svg class="ic-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z" fill="currentColor"/></svg>
+            <svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10l8-5z" fill="currentColor"/></svg>
+          </button>
+          <button class="ctrl ctrl--sound" id="soundBtn" aria-pressed="false" aria-label="Turn sound on">
+            <svg class="ic-off" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor"/><path d="m10.5 6 4 4m0-4-4 4" stroke="currentColor" stroke-width="1.4"/></svg>
+            <span class="eq ic-on" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="lbl" id="soundLbl">Sound off</span>
+          </button>
+        </span>
+      </div>
+    </div>
+    <span class="paused-tag" aria-hidden="true">Paused</span>
+    <p class="sr" id="live" aria-live="polite"></p>
+
+    <div id="slides">
+
+      <!-- 01 Intro -->
+      <section class="slide" data-dur="7" data-max="14" data-video="hero-tall" data-label="Creative. Media. Production." aria-label="Kebbe Media">
+        <div class="media"><img src="media/hero-tall.jpg" alt=""></div><div class="shade"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Bahrain &middot; Saudi Arabia &middot; GCC &middot; Beyond</span>
+          <h1 class="h h--xl"><span class="m" style="--d:1"><span>Kebbe</span></span><span class="m" style="--d:2"><span class="serif">Media</span></span></h1>
+          <p class="p p--lead a" style="--d:4">Creative. Media. Production.</p>
+        </div>
+      </section>
+
+      <!-- 02 Who we are -->
+      <section class="slide" data-dur="7" data-video="studio" data-label="Who we are" aria-label="Who we are">
+        <div class="media"><img src="media/studio.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Who we are</span>
+          <h2 class="h"><span class="m" style="--d:1"><span>We create</span></span><span class="m" style="--d:2"><span>what people</span></span><span class="m" style="--d:3"><span class="serif">notice.</span></span></h2>
+          <p class="p a" style="--d:5">We build brands, create content and produce experiences that people notice.</p>
+          <span class="tags a" style="--d:6">Bahrain &middot; Saudi Arabia &middot; GCC &middot; Beyond</span>
+        </div>
+      </section>
+
+      <!-- 03 Pillars -->
+      <section class="slide slide--gold" data-dur="5" data-label="Four pillars" aria-label="Our four pillars">
+        <div class="body body--mid">
+          <span class="kick a" style="--d:0">Four pillars</span>
+          <div class="pillars">
+            <p class="h"><span class="m" style="--d:1"><span>Strategy</span></span></p>
+            <p class="h"><span class="m" style="--d:2"><span class="serif">Creative</span></span></p>
+            <p class="h"><span class="m" style="--d:3"><span>Production</span></span></p>
+            <p class="h"><span class="m" style="--d:4"><span class="serif">Digital</span></span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 What we do -->
+      <section class="slide slide--dark" data-dur="8" data-label="What we do" aria-label="What we do">
+        <div class="body body--top">
+          <span class="kick a" style="--d:0">What we do</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>What we <span class="serif">do.</span></span></span></h2>
+          <div class="groups">
+            <div class="a" style="--d:3"><h3>Brand</h3><ul><li>Branding</li><li>Creative direction</li><li>Campaigns</li></ul></div>
+            <div class="a" style="--d:4"><h3>Content</h3><ul><li>Photography</li><li>Videography</li><li>Content creation</li><li>Design</li><li>Motion</li></ul></div>
+            <div class="a" style="--d:5"><h3>Digital</h3><ul><li>Social media</li><li>Digital campaigns</li><li>Web</li><li>WhatsApp Business</li></ul></div>
+            <div class="a" style="--d:6"><h3>Production</h3><ul><li>Events</li><li>Multi-camera</li><li>Interviews</li><li>Editing</li><li>Post-production</li></ul></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 This is Kebbe -->
+      <section class="slide" data-dur="6" data-video="piani-celebrate" data-label="This is Kebbe" aria-label="This is Kebbe">
+        <div class="media"><img src="media/piani-celebrate.jpg" alt=""></div><div class="shade"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Piani Restobar &middot; Kebbe film</span>
+          <h2 class="h h--xl"><span class="m" style="--d:1"><span>This is</span></span><span class="m" style="--d:2"><span class="serif">Kebbe.</span></span></h2>
+        </div>
+      </section>
+
+      <!-- 06 How we work -->
+      <section class="slide slide--dark" data-dur="8" data-label="How we work" aria-label="How we work">
+        <div class="body body--top">
+          <span class="kick a" style="--d:0">How we work</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>Think. Create.</span></span><span class="m" style="--d:2"><span>Produce. <span class="serif">Launch</span></span></span><span class="m" style="--d:3"><span>&amp; amplify.</span></span></h2>
+          <ol class="steps">
+            <li class="a" style="--d:4"><span class="n">01</span><b>Strategy &amp; direction</b><span class="dsc">Understanding the brand, audience and objective.</span></li>
+            <li class="a" style="--d:5"><span class="n">02</span><b>Creative development</b><span class="dsc">Ideas, concepts, visual direction and campaigns.</span></li>
+            <li class="a" style="--d:6"><span class="n">03</span><b>Content &amp; production</b><span class="dsc">Photography, videography, design, motion and production.</span></li>
+            <li class="a" style="--d:7"><span class="n">04</span><b>Launch &amp; amplify</b><span class="dsc">Digital, social, campaigns, events and audience engagement.</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 07 Production -->
+      <section class="slide" data-dur="7" data-video="angus-team" data-label="Production" aria-label="Production">
+        <div class="media"><img src="media/angus-team.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Production</span>
+          <h2 class="h"><span class="m" style="--d:1"><span>From the first</span></span><span class="m" style="--d:2"><span>idea <span class="serif">to the</span></span></span><span class="m" style="--d:3"><span>final frame.</span></span></h2>
+          <ul class="chips a" style="--d:5"><li>Photography</li><li>Videography</li><li>Multi-camera</li><li>Events</li><li>Interviews</li><li>Behind the scenes</li><li>Editing</li><li>Motion</li><li>VFX</li><li>Post-production</li></ul>
+        </div>
+      </section>
+
+      <!-- 08 Ferrari -->
+      <section class="slide" data-dur="7" data-label="Selected work 01" aria-label="Ferrari and Euro Motors">
+        <div class="wcard"><svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg></div>
+        <span class="big-num a" style="--d:0" aria-hidden="true">01</span>
+        <div class="body">
+          <span class="kick a" style="--d:0">Selected work &middot; 01</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>Ferrari</span></span><span class="m" style="--d:2"><span><span class="serif">&times;</span> Euro Motors</span></span></h2>
+          <span class="tags a" style="--d:3">Big production &middot; Premium brand</span>
+          <p class="p a" style="--d:4">Purosangue reveal: event coverage, cinematic highlight reels, photography and campaign visuals, extended through social storytelling. Plus the Passion campaign.</p>
+          <span class="note a" style="--d:5">Footage to be added</span>
+        </div>
+      </section>
+
+      <!-- 09 IKTVA -->
+      <section class="slide" data-dur="7" data-label="Selected work 02" aria-label="IKTVA and Publicis">
+        <div class="wcard"><svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg></div>
+        <span class="big-num a" style="--d:0" aria-hidden="true">02</span>
+        <div class="body">
+          <span class="kick a" style="--d:0">Selected work &middot; 02</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>IKTVA</span></span><span class="m" style="--d:2"><span><span class="serif">&times;</span> Publicis</span></span></h2>
+          <span class="tags a" style="--d:3">Corporate &middot; Large-scale event production</span>
+          <p class="p a" style="--d:4">Indoor and outdoor photography across keynotes, awards and exhibition floors, with a dedicated sound engineer and edited assets ready for press and social.</p>
+          <span class="note a" style="--d:5">Footage to be added</span>
+        </div>
+      </section>
+
+      <!-- 10 Xtra Cafein -->
+      <section class="slide" data-dur="7" data-video="cafein-pour" data-label="Selected work 03" aria-label="Xtra Cafein">
+        <div class="media"><img src="media/cafein-pour.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Selected work &middot; 03</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>Xtra <span class="serif">Cafein</span></span></span></h2>
+          <span class="tags a" style="--d:2">Social media + content creation</span>
+          <p class="p a" style="--d:3">Social media and content creation, plus invites and prints, in Arabic and English.</p>
+          <div class="stats a" style="--d:4"><div><b>57</b><span>Posts</span></div><div><b>16</b><span>Videos</span></div><div><b>Daily</b><span>Stories</span></div></div>
+        </div>
+      </section>
+
+      <!-- 11 Piani -->
+      <section class="slide" data-dur="7" data-video="piani-dinner" data-label="Selected work 04" aria-label="Piani Restobar">
+        <div class="media"><img src="media/piani-dinner.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Selected work &middot; 04</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>Piani</span></span><span class="m" style="--d:2"><span class="serif">Restobar</span></span></h2>
+          <span class="tags a" style="--d:3">Digital &middot; Social media &middot; WhatsApp Business &middot; Guest communication &middot; Events</span>
+          <p class="p a" style="--d:4">Digital, social, WhatsApp Business and guest communication, with campaign visuals and full event coverage.</p>
+        </div>
+      </section>
+
+      <!-- 12 Black Angus -->
+      <section class="slide" data-dur="6" data-video="angus-plate" data-label="Black Angus" aria-label="Black Angus">
+        <div class="media"><img src="media/angus-plate.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Black Angus Group</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>Black</span></span><span class="m" style="--d:2"><span class="serif">Angus</span></span></h2>
+          <span class="tags a" style="--d:3">Steak house film &middot; Shot and edited by Kebbe</span>
+          <p class="p a" style="--d:4">&ldquo;Feel the luxury in taste.&rdquo;</p>
+        </div>
+      </section>
+
+      <!-- 13 More work -->
+      <section class="slide slide--dark" data-dur="8" data-label="More work" aria-label="More work">
+        <div class="body body--top">
+          <span class="kick a" style="--d:0">More work</span>
+          <div class="duo">
+            <article class="a" style="--d:1">
+              <h3>STEM <span class="serif">Racing</span></h3>
+              <span class="tags">Impact BBDO</span>
+              <p class="p">Full photo and video coverage, highlight films, teasers, interviews, colour grade and sound mix.</p>
+            </article>
+            <article class="a" style="--d:3">
+              <h3>Touchdown <span class="serif">Middle East</span></h3>
+              <span class="tags">Gulf Data Center Association</span>
+              <div class="stats"><div><b>2</b><span>Days</span></div><div><b>21+</b><span>Hours of filming</span></div></div>
+              <p class="p">Highlight films and press-ready assets.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 Creative beyond content -->
+      <section class="slide" data-dur="6" data-video="piani-events" data-label="Creative beyond content" aria-label="Creative beyond content">
+        <div class="media"><img src="media/piani-events.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body">
+          <span class="kick a" style="--d:0">Design &amp; artwork</span>
+          <h2 class="h"><span class="m" style="--d:1"><span>Creative</span></span><span class="m" style="--d:2"><span class="serif">beyond</span></span><span class="m" style="--d:3"><span>content.</span></span></h2>
+          <ul class="chips a" style="--d:5"><li>Brand identity</li><li>Campaign artwork</li><li>Social design</li><li>Event artwork</li><li>Menus &amp; collateral</li><li>Digital artwork</li></ul>
+        </div>
+      </section>
+
+      <!-- 15 Team -->
+      <section class="slide slide--gold" data-dur="6" data-label="The people" aria-label="One team, many specialists">
+        <div class="body">
+          <span class="kick a" style="--d:0">The people</span>
+          <h2 class="h"><span class="m" style="--d:1"><span>One team.</span></span><span class="m" style="--d:2"><span class="serif">Many</span></span><span class="m" style="--d:3"><span>specialists.</span></span></h2>
+          <ul class="chips a" style="--d:5"><li>Strategy</li><li>Creative</li><li>Design</li><li>Copy</li><li>Photo</li><li>Video</li><li>Editing</li><li>Motion</li><li>Social</li></ul>
+          <p class="p a" style="--d:6">Built around the project. Powered by the right people.</p>
+        </div>
+      </section>
+
+      <!-- 16 Statement -->
+      <section class="slide" data-dur="7" data-video="national" data-label="Presence. Stories. Impact." aria-label="Brand statement">
+        <div class="media"><img src="media/national.jpg" alt=""></div><div class="shade shade--heavy"></div>
+        <div class="body body--mid">
+          <h2 class="h"><span class="m" style="--d:0"><span>We build</span></span><span class="m" style="--d:1"><span class="serif">presence.</span></span><span class="m" style="--d:3"><span>We tell</span></span><span class="m" style="--d:4"><span class="serif">stories.</span></span><span class="m" style="--d:6"><span>We make</span></span><span class="m" style="--d:7"><span class="serif">impact.</span></span></h2>
+        </div>
+      </section>
+
+      <!-- 17 Trusted by -->
+      <section class="slide slide--dark" data-dur="11" data-label="Trusted by" aria-label="Trusted by">
+        <div class="body body--top" style="padding-bottom:4cqh">
+          <span class="kick a" style="--d:0">Trusted by &middot; 48 brands</span>
+          <h2 class="h h--m"><span class="m" style="--d:1"><span>Trusted <span class="serif">by</span></span></span></h2>
+          <div class="names" style="--roll:11s"><ul id="names"></ul></div>
+        </div>
+      </section>
+
+      <!-- 18 CTA -->
+      <section class="slide slide--gold" data-dur="0" data-label="Let's make it real" aria-label="Start a project">
+        <div class="body">
+          <span class="kick a" style="--d:0">Kebbe Media</span>
+          <h2 class="h"><span class="m" style="--d:1"><span>Have an idea?</span></span><span class="m" style="--d:2"><span class="serif">Let&rsquo;s make</span></span><span class="m" style="--d:3"><span>it real.</span></span></h2>
+          <div class="cta a" style="--d:5">
+            <a class="btn btn--ink" href="https://wa.me/97338440036?text=Hi%20Kebbe%20Media%2C%20I%27d%20like%20to%20start%20a%20project." target="_blank" rel="noopener">Start a project <span aria-hidden="true">&rarr;</span></a>
+            <a class="btn btn--line" href="mailto:info@kebbemedia.com?subject=New%20project">info@kebbemedia.com <span aria-hidden="true">&nearr;</span></a>
+          </div>
+          <div class="contacts a" style="--d:6">
+            <div><small>Bahrain</small><span>+973 3844 0036</span></div>
+            <div><small>Saudi Arabia</small><span>+966 55 856 2358</span></div>
+            <div><small>Instagram</small><a href="https://www.instagram.com/kebbemedia/" target="_blank" rel="noopener">@kebbemedia</a></div>
+            <div><small>LinkedIn</small><a href="https://www.linkedin.com/company/kebbemedia" target="_blank" rel="noopener">kebbemedia</a></div>
+          </div>
+          <button class="replay a" style="--d:7" id="replay"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.6-3.7M3 2.5v3h3" stroke="currentColor" stroke-width="1.5"/></svg>Watch again</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Cover: the first frame, and the tap that unlocks sound -->
+    <div class="cover" id="cover">
+      <div class="cover__media" aria-hidden="true"></div>
+      <svg class="kmark cover__k" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>
+      <span class="kick">Company profile &middot; 18 stories</span>
+      <h1 class="h">Kebbe <span class="serif">Media</span></h1>
+      <p class="p p--lead">Creative. Media. Production.</p>
+      <span class="cover__meta">Bahrain &middot; Saudi Arabia &middot; GCC &middot; Beyond</span>
+      <div class="cover__btns">
+        <button class="btn btn--gold" id="startSound">Watch with sound <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor"/><path d="M10.5 5.5a3.5 3.5 0 0 1 0 5M12.5 3.5a6.3 6.3 0 0 1 0 9" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></button>
+        <button class="btn btn--ghost" id="startMute">Watch muted <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10l8-5z" fill="currentColor"/></svg></button>
+      </div>
+      <span class="hint">Tap right for next &middot; left for back &middot; hold to pause &middot; sound button top right</span>
+    </div>
+  </main>
+
+  <button class="side-nav side-nav--next" id="sideNext" aria-label="Next story"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m7 3 6 6-6 6" stroke="currentColor" stroke-width="1.6"/></svg></button>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const story = $('#story'), slides = $$('.slide', story), bars = $('#bars');
+  const soundBtn = $('#soundBtn'), soundLbl = $('#soundLbl'), pauseBtn = $('#pauseBtn');
+  const cover = $('#cover'), backdrop = $('#backdrop'), live = $('#live');
+  const N = slides.length;
+
+  // client list (from Kebbe's company profile)
+  const CLIENTS = ['Impact BBDO', 'Touchdown Middle East', 'Aims Gulf', 'IKTVA Aramco', 'Kaya', 'The K Hotel', 'The Gulf Hotel', 'Gallery 21', 'VOID', 'Azul Beach', 'Layali Fairuz', 'Babylonia', 'Zyra', 'Black Angus Group', 'Seven Hotel', 'Paradiso', 'Irish Corner', 'Xtra Cafein', 'Gulf Brands International', 'Shan Foods', 'Ziri Spa', 'Eden Lounge', 'Juffair Boulevard Hotel & Suites', 'Alqahwa', 'Malibu Restaurant & Coffee Shop Management', 'House of Athletes', 'Blue Lotus Property Management', 'Habara Hotel & Restaurant Tourism Management', 'The Tunnel', 'Ziva', 'Hyde', 'M Lounge', 'Blue Sapphire Amusement & Theme Parks', 'Remya Management', 'Texas Longhorn', 'Ourania Restaurant', 'Eat Greek W.L.L', 'Obica W.L.L', "Rick's Country Kitchen", 'Sarima Management', 'Khaliji Cafe', 'Avanit Restaurant & Cafe', 'Volto Restaurant', 'La Luna Consultancy', 'Three Monkey Stickers', 'The Entertainer', 'Euro Motors', 'Remza Investment'];
+  $('#names').innerHTML = CLIENTS.map(n => `<li>${n.replace(/&/g, '&amp;').replace(/'/g, '&rsquo;')}</li>`).join('');
+
+  bars.innerHTML = slides.map(() => '<span><i></i></span>').join('');
+  const fills = $$('i', bars), barEls = $$('span', bars);
+
+  /* ---------- state ---------- */
+  let idx = 0, t = 0, started = false, userPaused = false, holding = false, hidden = false;
+  const paused = () => !started || userPaused || holding || hidden;
+  const dur = i => parseFloat(slides[i].dataset.dur) || 0;   // 0 = stays until the viewer acts
+
+  /* ---------- video ----------
+     Two persistent <video> elements take turns: one shows the current story, the other preloads the next.
+     Both are "unlocked" inside the first tap, so later clips can play with their own sound even when the
+     story advances on its own (iOS only allows sound on elements that have played from a tap). */
+  const players = [0, 1].map(() => {
+    const v = document.createElement('video');
+    Object.assign(v, { playsInline: true, preload: 'auto', loop: false, muted: true });
+    v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+    v.addEventListener('playing', () => v.classList.add('ready'));
+    v.addEventListener('ended', () => { if (v === curPlayer() && !paused()) next(); });
+    return v;
+  });
+  let pi = 0;                                    // index of the player showing the current story
+  const curPlayer = () => slides[idx].dataset.video ? players[pi] : null;
+  const srcOf = name => `media/${name}.mp4`;
+  function load(v, name) { if (v.dataset.name !== name) { v.dataset.name = name; v.classList.remove('ready'); v.src = srcOf(name); v.load(); } }
+  function playWithSound(v) {
+    v.muted = !soundOn;
+    const p = v.play();
+    if (p && p.catch) p.catch(err => { if (err && err.name === 'NotAllowedError' && !v.muted) { v.muted = true; v.play().catch(() => { }); showSoundHint(); } });
+  }
+  function syncVideos() {
+    const name = slides[idx].dataset.video;
+    players.forEach(v => { v.pause(); });
+    if (name) {
+      // reuse the player that already preloaded this clip, otherwise take the other one
+      const k = players.findIndex(v => v.dataset.name === name);
+      pi = k >= 0 ? k : 1 - pi;
+      const v = players[pi]; load(v, name);
+      try { v.currentTime = 0; } catch (e) { }
+      $('.media', slides[idx]).appendChild(v);
+      if (!paused()) playWithSound(v);
+    }
+    // warm the next clip in the spare player
+    const nxt = slides.slice(idx + 1).find(sl => sl.dataset.video);
+    if (nxt) { const spare = players[name ? 1 - pi : pi]; if (spare !== curPlayer()) { spare.remove(); load(spare, nxt.dataset.video); } }
+  }
+
+  /* ---------- navigation ---------- */
+  function show(i) {
+    idx = Math.max(0, Math.min(N - 1, i)); t = 0;
+    slides[idx].classList.remove('on'); void slides[idx].offsetWidth;   // restart the slide's entrance
+    slides.forEach((s, k) => { s.classList.toggle('on', k === idx); s.setAttribute('aria-hidden', k === idx ? 'false' : 'true'); });
+    barEls.forEach((b, k) => b.classList.toggle('done', k < idx));
+    fills.forEach((f, k) => { if (k >= idx) f.style.transform = 'scaleX(0)'; });
+    const img = $('.media img', slides[idx]);
+    backdrop.style.backgroundImage = img ? `url("${img.getAttribute('src')}")` : 'none';
+    backdrop.style.backgroundColor = slides[idx].classList.contains('slide--gold') ? '#8a5806' : '#11100e';
+    $('#where').textContent = slides[idx].dataset.label;
+    live.textContent = `Story ${idx + 1} of ${N}: ${slides[idx].getAttribute('aria-label')}`;
+    $('#sidePrev').disabled = idx === 0; $('#sideNext').disabled = idx === N - 1;
+    syncVideos(); applyPause();
+  }
+  const next = () => { if (idx < N - 1) show(idx + 1); };
+  const prev = () => { if (t > 1.2 && dur(idx)) show(idx); else show(idx - 1); };
+
+  /* ---------- clock ---------- */
+  let last = performance.now();
+  function tick(now) {
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    if (!paused()) {
+      const v = curPlayer(), max = parseFloat(slides[idx].dataset.max) || 0;
+      if (v && v.duration && isFinite(v.duration)) {
+        const d = max ? Math.min(max, v.duration) : v.duration;
+        fills[idx].style.transform = `scaleX(${Math.min(1, v.currentTime / d)})`;
+        if (max && v.currentTime >= d) next();
+      } else {
+        const d = dur(idx);
+        if (d) { t += dt; fills[idx].style.transform = `scaleX(${Math.min(1, t / d)})`; if (t >= d && (!v || v.error || t >= d + 6)) next(); }
+        else fills[idx].style.transform = 'scaleX(1)';
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  function applyPause() {
+    story.classList.toggle('is-paused', paused() && started);
+    story.classList.toggle('is-holding', holding);
+    pauseBtn.setAttribute('aria-label', userPaused ? 'Play story' : 'Pause story');
+    const v = curPlayer();
+    if (v) { if (paused()) v.pause(); else playWithSound(v); }
+    // the running animations on the slide freeze with the story
+    story.style.setProperty('--ps', paused() ? 'paused' : 'running');
+    $$('.slide.on *', story).forEach(el => { el.style.animationPlayState = paused() ? 'paused' : ''; });
+  }
+
+  /* ---------- sound ---------- */
+  // sound only ever comes from a story's own clip; stories without a clip are silent
+  let soundOn = false;
+  function setSound(on) {
+    soundOn = on;
+    soundBtn.setAttribute('aria-pressed', String(on));
+    soundLbl.textContent = on ? 'Sound on' : 'Sound off';
+    soundBtn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    hideSoundHint();
+    const v = curPlayer();
+    if (v) { v.muted = !on; if (!paused()) playWithSound(v); }
+    // unlock the spare player inside this tap, so later clips can play with their sound
+    if (on) unlockAll();
+  }
+  function unlockAll() {
+    players.forEach(v => { if (v !== curPlayer() && v.getAttribute('src')) { v.muted = false; const p = v.play(); if (p && p.then) p.then(() => { if (v !== curPlayer()) v.pause(); }).catch(() => { }); } });
+  }
+  const hint = document.createElement('button');
+  hint.className = 'sound-hint'; hint.type = 'button'; hint.textContent = 'Tap for sound'; hint.hidden = true;
+  story.appendChild(hint);
+  function showSoundHint() { hint.hidden = false; }
+  function hideSoundHint() { hint.hidden = true; }
+  hint.addEventListener('click', e => { e.stopPropagation(); setSound(true); });
+  soundBtn.addEventListener('click', e => { e.stopPropagation(); setSound(!soundOn); });
+
+  /* ---------- start ---------- */
+  function start(withSound) {
+    started = true; cover.classList.add('gone');
+    soundOn = withSound;
+    show(0);
+    setSound(withSound);
+    applyPause();
+    setTimeout(() => story.focus({ preventScroll: true }), 50);
+  }
+  $('#startSound').addEventListener('click', e => { e.stopPropagation(); start(true); });
+  $('#startMute').addEventListener('click', e => { e.stopPropagation(); start(false); });
+  $('#replay').addEventListener('click', e => { e.stopPropagation(); show(0); });
+  pauseBtn.addEventListener('click', e => { e.stopPropagation(); userPaused = !userPaused; applyPause(); });
+  $('#sidePrev').addEventListener('click', () => { if (started) prev(); });
+  $('#sideNext').addEventListener('click', () => { if (started) next(); else start(false); });
+
+  /* ---------- tap, hold, swipe ---------- */
+  let downAt = 0, downX = 0, downY = 0, holdTimer = 0, didHold = false;
+  story.tabIndex = -1;
+  story.addEventListener('pointerdown', e => {
+    if (!started || e.button > 0 || e.target.closest('a, button, .names')) return;
+    downAt = performance.now(); downX = e.clientX; downY = e.clientY; didHold = false;
+    holdTimer = setTimeout(() => { holding = true; didHold = true; applyPause(); }, 220);
+  });
+  const endPress = e => {
+    if (!downAt) return;
+    clearTimeout(holdTimer);
+    const dx = e.clientX - downX, dy = e.clientY - downY;
+    if (holding) { holding = false; applyPause(); }
+    if (!didHold) {
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { dx < 0 ? next() : prev(); }
+      else if (Math.abs(dx) < 12 && Math.abs(dy) < 12) {
+        const r = story.getBoundingClientRect();
+        (e.clientX - r.left) < r.width * .3 ? prev() : next();
+      }
+    }
+    downAt = 0;
+  };
+  story.addEventListener('pointerup', endPress);
+  story.addEventListener('pointercancel', () => { clearTimeout(holdTimer); if (holding) { holding = false; applyPause(); } downAt = 0; });
+  story.addEventListener('contextmenu', e => { if (started) e.preventDefault(); });
+
+  addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input, textarea')) return;
+    if (!started) { if (e.key === 'Enter' && document.activeElement === document.body) start(false); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+    else if (e.key === ' ' && !(e.target.closest && e.target.closest('a, button'))) { e.preventDefault(); userPaused = !userPaused; applyPause(); }
+    else if (e.key.toLowerCase() === 'm') setSound(!soundOn);
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    hidden = document.hidden; applyPause();
+  });
+
+  /* ---------- fit: shrink any headline whose longest word would overflow (e.g. while a fallback font shows) ---------- */
+  function fitAll() {
+    $$('.h, .groups h3, .duo h3', story).forEach(h => {
+      h.style.fontSize = '';
+      for (let k = 0; k < 8; k++) {
+        const W = Math.min(h.clientWidth || 1e9, (h.closest('.body, .cover') || story).clientWidth); let worst = 1;
+        const parts = $$('.m', h); (parts.length ? parts : [h]).forEach(m => { if (m.scrollWidth > m.clientWidth + 1) worst = Math.min(worst, m.clientWidth / m.scrollWidth); });
+        if (h.scrollWidth > W + 1) worst = Math.min(worst, W / h.scrollWidth);
+        if (worst >= 1) break;
+        h.style.fontSize = (parseFloat(getComputedStyle(h).fontSize) * worst * .98) + 'px';
+      }
+    });
+  }
+  fitAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+  let rz = 0; addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(fitAll); });
+
+  // first frame: slide 1 sits under the cover, already composed
+  slides[0].classList.add('on');
+})();
+</script>
+
+</body>
+</html>
