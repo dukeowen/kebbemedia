@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kebbe Media</title>
+<meta name="description" content="Creative. Media. Production.">
+<meta property="og:title" content="Kebbe Media">
+<meta property="og:description" content="Creative. Media. Production.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dukeowen.github.io/kebbemedia/">
+<meta property="og:image" content="https://dukeowen.github.io/kebbemedia/media/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="media/share.jpg">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Kebbe Media: black stage, white and orange type, one condensed face plus mono labels. Mobile-first: base styles are for phones (320px+),
+   min-width queries add the larger-screen layouts on top. */
+:root {
+  /* two text colours only: white (--bone) and orange (--gold). --ash and --gold-light are kept as aliases. */
+  --ink: #080808; --ink-2: #121212; --bone: #f5f0e7; --ash: var(--bone);
+  --line: rgba(245, 240, 231, 0.13);
+  --gold: #e9a50b; --amber: #c08208; --gold-light: var(--gold); --gold-line: rgba(233, 165, 11, .7);
+  --gold-dark: #975d08; --cream: #fcf3d7;
+  --sheen: linear-gradient(100deg, #975d08 0%, #eaa60b 45%, #f8b408 70%, #fcf3d7 100%);
+  --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --pad: clamp(16px, 3.2vw, 56px);
+  --h: clamp(38px, 12.2vw, 170px); /* the one headline size, taken from the opening statement */
+  --pl: max(var(--pad), env(safe-area-inset-left, 0px));
+  --pr: max(var(--pad), env(safe-area-inset-right, 0px));
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.7, 0, .2, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--ink); -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+body { margin: 0; background: var(--ink); color: var(--bone); font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  font-variation-settings: "wdth" 100; overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
+::selection { background: var(--gold); color: var(--bone); }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p { margin: 0; font-weight: inherit; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+img, video, canvas { display: block; max-width: 100%; }
+:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+.sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { padding-left: var(--pl); padding-right: var(--pr); }
+
+/* ---------- type ---------- */
+.display { font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; line-height: .92; letter-spacing: -.012em; overflow-wrap: break-word; }
+.serif { color: var(--gold); } /* accent words: same display face, in orange */
+.mono { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; line-height: 1.5; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ash); }
+.gold { color: var(--gold); }
+.muted { color: var(--ash); }
+.kmark { display: block; height: 1em; width: auto; overflow: visible; }
+.kmark .k-bar { fill: var(--cream); } .kmark .k-leg { fill: var(--gold); opacity: .92; } .kmark .k-band { fill: #fff; }
+.wordmark-sm { font-family: var(--f-body); font-weight: 640; letter-spacing: -.02em; }
+.wordmark-sm b { font-weight: 720; color: var(--gold); }
+
+/* reveals */
+.ln { display: block; overflow: hidden; padding: .08em 0 .05em; margin: -.08em 0 -.05em; }
+.ln > span { display: block; }
+.js .rv .ln > span { transform: translate3d(0, 108%, 0) rotate(2deg); transform-origin: 0 100%; transition: transform 1.25s var(--ease-out); transition-delay: calc(var(--i, 0) * 90ms); }
+.js .rv.in .ln > span { transform: none; }
+.js .fade { opacity: 0; transform: translateY(18px); transition: opacity 1s var(--ease-out), transform 1.2s var(--ease-out); transition-delay: calc(var(--i, 0) * 80ms + 150ms); }
+.js .fade.in { opacity: 1; transform: none; }
+
+/* ---------- loader ---------- */
+.loader { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden;
+  background: var(--gold);
+  transition: clip-path 1.2s var(--ease-io); clip-path: inset(0 0 0 0); }
+.loader.out { clip-path: inset(0 0 100% 0); }
+.loader.gone { display: none; }
+.loader__mark { display: flex; flex-direction: column; align-items: center; gap: 4vh; }
+.kmark--loader { height: clamp(120px, 26vh, 300px); filter: drop-shadow(0 30px 60px rgba(90, 50, 0, .35)); }
+.kmark--loader .k-bar { fill: var(--bone); transform-origin: 0 100%; transform: scaleY(0); transition: transform .9s var(--ease-out); }
+.kmark--loader .k-leg { fill: var(--bone); opacity: .9; clip-path: inset(0 0 100% 0); transition: clip-path 1s var(--ease-out) .35s; }
+.kmark--loader .k-band { fill: #fff; transform: translate(-40%, 40%); opacity: 0; transition: transform 1.1s var(--ease-out) .6s, opacity .5s .6s; }
+.loader.go .kmark--loader .k-bar { transform: none; }
+.loader.go .kmark--loader .k-leg { clip-path: inset(0 0 0 0); }
+.loader.go .kmark--loader .k-band { transform: none; opacity: 1; }
+.loader .wordmark-sm { font-size: clamp(22px, 2.4vw, 34px); color: var(--bone); opacity: 0; transform: translateY(12px); transition: opacity .8s 1s, transform 1s var(--ease-out) 1s; }
+.loader .wordmark-sm b { color: var(--bone); }
+.loader.go .wordmark-sm { opacity: 1; transform: none; }
+.loader__bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--ink); transform-origin: 0 50%; transform: scaleX(var(--load, 0)); transition: transform .4s linear; }
+
+/* ---------- nav ---------- */
+.nav { position: fixed; z-index: 60; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) var(--pr) 8px var(--pl);
+  background: linear-gradient(180deg, rgba(8,8,8,.7), rgba(8,8,8,0)); transition: transform .7s var(--ease-out); }
+.nav.hide { transform: translateY(-110%); }
+.nav:focus-within { transform: none; }
+.nav__logo { display: inline-flex; align-items: center; gap: 10px; font-size: 19px; line-height: 1; min-height: 44px; }
+.nav__logo .kmark { height: 26px; }
+.nav__mid { display: none; }
+.menu-btn { width: 48px; height: 48px; margin-right: -12px; display: grid; place-items: center; }
+.menu-btn__icon { width: 26px; height: 9px; position: relative; }
+.menu-btn__icon::before, .menu-btn__icon::after { content: ""; position: absolute; left: 0; right: 0; height: 1.5px; background: currentColor; transition: transform .6s var(--ease-out); }
+.menu-btn__icon::before { top: 0; } .menu-btn__icon::after { bottom: 0; }
+.menu-open .menu-btn__icon::before { transform: translateY(3.75px) rotate(20deg); }
+.menu-open .menu-btn__icon::after { transform: translateY(-3.75px) rotate(-20deg); }
+
+/* menu overlay */
+.menu { position: fixed; inset: 0; z-index: 55; background: var(--ink-2); display: grid; grid-template-columns: 1fr; overflow: hidden; visibility: hidden;
+  clip-path: circle(0px at calc(100% - 40px) 32px); transition: clip-path 1s var(--ease-io), visibility 0s 1s; }
+.menu-open .menu { clip-path: circle(150vmax at calc(100% - 40px) 32px); visibility: visible; transition: clip-path 1s var(--ease-io); }
+.menu__scroll { overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
+  padding: calc(76px + env(safe-area-inset-top, 0px)) var(--pr) calc(24px + env(safe-area-inset-bottom, 0px)) var(--pl); }
+.menu__links { display: flex; flex-direction: column; }
+.menu__links a { display: flex; align-items: baseline; gap: 14px; min-height: 44px; padding: 3px 0; font-size: clamp(28px, 8.4vw, 44px); border-bottom: 1px solid var(--line); }
+.menu__links a .mono { color: var(--gold); width: 2.2em; flex: none; font-size: 12px; }
+.menu__links a .display { line-height: 1.05; transition: transform .6s var(--ease-out), color .4s; }
+.menu__links a:active .display { color: var(--gold); }
+.menu__foot { display: grid; gap: 4px; }
+.menu__foot a { display: inline-flex; align-items: center; min-height: 40px; font-family: var(--f-mono); font-size: 13px; letter-spacing: .04em; color: var(--ash); overflow-wrap: anywhere; }
+.menu__media { display: none; position: relative; }
+.menu__media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .7; }
+
+/* cursor (mouse devices only) */
+.cursor { display: none; position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; }
+.cursor__dot { position: absolute; width: 8px; height: 8px; margin: -4px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 1px rgba(8,8,8,.55); transition: transform .35s var(--ease-out); }
+.cursor.is-link .cursor__dot { transform: scale(4); }
+.grain { display: none; position: fixed; inset: -50%; z-index: 80; pointer-events: none; opacity: .045; background-size: 180px; animation: grain 1s steps(6) infinite; }
+@keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-6%, 4%); } 40% { transform: translate(5%, -7%); } 60% { transform: translate(-3%, 8%); } 80% { transform: translate(7%, 2%); } 100% { transform: translate(-2%, -5%); } }
+
+/* ---------- 01 opening: particles condense into the K ---------- */
+.phil { position: relative; height: 100vh; height: 100svh; min-height: 540px; background: var(--ink); overflow: hidden; }
+.phil__stage { position: relative; height: 100%; overflow: hidden; }
+.phil__gl { position: absolute; inset: 0; width: 100%; height: 100%; }
+.phil__label { position: absolute; left: var(--pl); right: var(--pr); top: calc(76px + env(safe-area-inset-top, 0px)); }
+.phil__txt { position: absolute; left: var(--pl); right: var(--pr); bottom: calc(9vh + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.phil__txt .display { display: block; white-space: nowrap; font-size: var(--fit, min(var(--h), 16.5vh)); line-height: .92; opacity: clamp(0, calc((var(--p, 0) - var(--k) * .16 - .18) * 7), 1); transform: translateY(calc(clamp(0, (var(--k) * .16 + .32 - var(--p, 0)) * 3, 1) * 30px)); }
+.phil__beyond { color: var(--gold); }
+.phil__fallback { display: none; }
+.no-gl .phil__fallback { display: block; position: absolute; left: 50%; top: 30%; height: 34vh; transform: translate(-50%, -50%); }
+.no-gl .phil__txt .display { opacity: 1; transform: none; }
+
+/* ---------- 02 showreel (full-bleed film) ---------- */
+.film { position: relative; height: 100vh; height: 100svh; min-height: 540px; overflow: hidden; background: var(--ink); }
+.film__video, .film__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film__video { transform: scale(calc(1.08 - var(--fp, 0) * .08)); }
+.film__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,8,1) 0%, rgba(8,8,8,0) 22%, rgba(8,8,8,0) 70%, rgba(8,8,8,.9) 100%); }
+.film__label { position: absolute; z-index: 2; left: 0; right: 0; top: 24px; }
+
+/* ---------- section scaffolding ---------- */
+.sec { position: relative; padding-top: 88px; padding-bottom: 72px; }
+.sec__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
+.sec__head .num { color: var(--gold); }
+.sec__title { font-size: var(--h); margin-top: 22px; }
+#tikTitle { font-size: clamp(28px, 8vw, 104px); }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li { color: var(--bone); border: 1px solid var(--line); padding: 8px 14px; border-radius: 100px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; transition: border-color .4s, color .4s; }
+.chips li.in-view { border-color: var(--gold-line); }
+
+/* ---------- 02 who we are ---------- */
+.who { padding-top: 0; padding-bottom: 0; }
+.who__scroll { height: 260vh; }
+/* what we do: title first, then the two campaign images (crossfade on phones, side by side on wide screens) */
+.what { padding-top: 0; }
+.what__scroll { height: 300vh; }
+.what .caps { margin-top: 56px; }
+#whatTitle { font-size: var(--h); }
+.what__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(calc(1.1 - var(--p, 0) * .1)); }
+.what__img--2 { opacity: clamp(0, calc((var(--p, 0) - .72) * 6), 1); }
+@media (min-aspect-ratio: 1/1) {
+  .what__img { width: 50%; }
+  .what__img--2 { left: 50%; opacity: 1; }
+}
+.who .who__statement { margin-top: 0; }
+.who .who__lead { margin-top: 28px; }
+.who__statement { margin-top: 32px; font-size: var(--h); max-width: 14ch; }
+.who__statement .w { color: transparent; -webkit-text-stroke: 1px var(--bone); transition: color .5s var(--ease-out); }
+.who__statement .w.serif { -webkit-text-stroke-color: var(--gold); }
+.who__statement .w.on { color: var(--bone); }
+.who__statement .w.serif.on { color: var(--gold); }
+.no-js .who__statement .w, html:not(.js) .who__statement .w { color: inherit; }
+.who__lead { margin-top: 28px; font-size: clamp(19px, 5.2vw, 26px); line-height: 1.38; max-width: 34ch; }
+.who__globe { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.pres__gl { width: 100%; max-width: 420px; aspect-ratio: 1; justify-self: center; touch-action: pan-y; }
+.markets { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: clamp(30px, 9vw, 64px); line-height: 1.05; }
+.markets i { font-style: normal; color: var(--gold); font-size: .5em; }
+.markets button { min-height: 44px; color: transparent; -webkit-text-stroke: 1px var(--bone); transition: color .4s; text-align: left; text-transform: uppercase; }
+.markets button.on { color: var(--bone); }
+.markets span { color: transparent; -webkit-text-stroke: 1px var(--bone); }
+.markets .mk-beyond { color: var(--gold); -webkit-text-stroke: 0; }
+.pillars { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 14px; }
+.pillars ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 16px; }
+.pillars li { font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: clamp(30px, 9vw, 56px); line-height: 1.1; border-bottom: 1px solid var(--line); padding: 6px 0; }
+.pillars li:nth-child(even) { color: var(--gold); }
+
+/* ---------- 03 what we do ---------- */
+.caps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; margin-top: 36px; }
+@media (min-width: 360px) { .caps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 36px 16px; } }
+.caps h3 { margin: 0 0 10px; font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: clamp(30px, 8.6vw, 58px); line-height: .9; color: transparent; -webkit-text-stroke: 1px var(--gold); transition: color .9s var(--ease-out); }
+.caps .in h3 { color: var(--gold); }
+.caps ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.caps li { font-size: 16px; line-height: 1.3; padding: 9px 0; border-bottom: 1px solid var(--line); }
+
+/* ---------- 04 this is kebbe (reels) ---------- */
+.kebbe-reels { padding-bottom: 72px; }
+.tik { margin-top: 32px; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-left: var(--pl); padding-right: var(--pr); }
+.tik::-webkit-scrollbar { display: none; }
+.tik__card { margin: 0; position: relative; width: clamp(160px, 56vw, 300px); aspect-ratio: 9/16; overflow: hidden; background: var(--ink-2); flex: none; border-radius: 4px; }
+.tik__card img, .tik__card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tik__card.ph-empty { display: grid; place-items: center; }
+
+/* empty media placeholder (no caption, no copy) */
+.ph-empty { position: relative; background: linear-gradient(160deg, #161616 0%, #0e0e0e 100%); outline: 1px solid rgba(233,165,11,.18); outline-offset: -1px; overflow: hidden; }
+.ph-empty::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 50% at 70% 20%, rgba(233,165,11,.12), rgba(8,8,8,0) 70%); }
+.ph-empty .kmark { position: absolute; left: 50%; top: 50%; height: 22%; max-height: 72px; transform: translate(-50%, -50%); opacity: .16; }
+
+/* ---------- 05 how we work ---------- */
+.process__title { font-size: var(--h); margin-top: 28px; }
+/* how we work: title first, then it dissolves into the food film as you scroll */
+.process { padding-top: 0; padding-bottom: 0; }
+.how__scroll { position: relative; height: 240vh; }
+.how__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.how__stage .process__title { margin: 0; }
+.how__label { position: absolute; left: 0; right: 0; top: 24px; z-index: 5; }
+.steps { list-style: none; padding: 0; margin: 44px 0 0; display: grid; gap: 28px; }
+.steps li { border-top: 1px solid var(--line); padding-top: 16px; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; position: relative; }
+.steps li::before { content: ""; position: absolute; left: 0; top: -1px; width: 44px; height: 1px; background: var(--gold); transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.2s var(--ease-out) .2s; }
+.steps li.in::before { transform: none; }
+.steps__n { grid-row: span 2; font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; font-size: 44px; line-height: .85; color: var(--gold); }
+.steps h3 { font-family: var(--f-display); font-weight: 800; font-variation-settings: "wdth" 80; font-stretch: 80%; text-transform: uppercase; font-size: 22px; line-height: 1.05; }
+.steps p { color: var(--ash); font-size: 16px; }
+
+/* ---------- 06 production ---------- */
+/* text first, then it dissolves into the film as you scroll (all screen sizes) */
+.reel { position: relative; height: 260vh; padding: 0; }
+.reel > .wrap { position: absolute; left: 0; right: 0; top: 24px; z-index: 5; }
+.reel__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.reel__frame { position: absolute; inset: 0; z-index: 1; overflow: hidden; background: var(--ink); }
+.reel__frame video { width: 100%; height: 100%; object-fit: cover; transform: scale(calc(1.15 - var(--p, 0) * .15)); }
+.reel__veil { position: absolute; inset: 0; z-index: 2; background: var(--ink); pointer-events: none; opacity: calc(.9 - clamp(0, (var(--p, 0) - .3) * 2.6, 1) * .9); }
+.reel__type { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; justify-content: center; padding: 0 var(--pr) 0 var(--pl); pointer-events: none;
+  opacity: calc(1 - clamp(0, (var(--p, 0) - .32) * 3.2, 1)); transform: translateY(calc(clamp(0, (var(--p, 0) - .32) * 3.2, 1) * -48px)); }
+.reel__type .display { display: block; font-size: var(--h); line-height: .92; }
+.reel__type .l1 { transform: translateX(calc(var(--p, 0) * -8vw)); }
+.reel__type .l2 { transform: translateX(calc(var(--p, 0) * 8vw)); }
+.reel__play { position: absolute; inset: 0; display: grid; place-items: center; z-index: 4; opacity: clamp(0, calc((var(--p, 0) - .62) * 5), 1); pointer-events: none; }
+.reel.ready .reel__play { pointer-events: auto; }
+.reel__btn { width: 84px; height: 84px; border-radius: 50%; border: 1px solid rgba(245,240,231,.7); display: grid; place-items: center; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); background: rgba(8,8,8,.25); transition: transform .5s var(--ease-out), border-color .4s, color .4s; }
+.reel__play:active .reel__btn { transform: scale(.94); border-color: var(--gold); color: var(--gold); }
+.reel__tags { position: absolute; left: var(--pl); right: var(--pr); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 4; margin: 0; opacity: clamp(0, calc((var(--p, 0) - .62) * 5), 1); }
+
+.player { position: fixed; inset: 0; z-index: 95; background: #000; opacity: 0; visibility: hidden; transition: opacity .5s, visibility 0s .5s; }
+.player.open { opacity: 1; visibility: visible; transition: opacity .5s; }
+.player video { width: 100%; height: 100%; object-fit: contain; }
+.player__close { position: absolute; z-index: 2; top: calc(12px + env(safe-area-inset-top, 0px)); right: var(--pr); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: rgba(8,8,8,.6); border: 1px solid var(--line); }
+
+/* ---------- 07 selected work ---------- */
+.work__list { list-style: none; margin: 40px 0 0; padding: 0; display: grid; gap: 56px; }
+.proj { display: grid; gap: 14px; }
+.proj__head { display: grid; gap: 8px; }
+.proj__num { color: var(--gold); }
+.proj__name { font-size: clamp(40px, 12.4vw, 92px); line-height: .9; }
+.proj__tags { color: var(--gold-light); font-size: 12px; }
+.proj__media { position: relative; aspect-ratio: 4/5; overflow: hidden; background: var(--ink-2); border-radius: 4px; }
+.proj__media video, .proj__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.js .proj__media { clip-path: inset(12% 0 0 0); transition: clip-path 1.3s var(--ease-out); }
+.js .proj.in .proj__media { clip-path: inset(0 0 0 0); }
+.proj__media .ph-empty { position: absolute; inset: 0; }
+.proj__desc { font-size: 17px; line-height: 1.5; }
+.stats { display: flex; flex-wrap: wrap; gap: 18px 32px; margin: 4px 0 0; }
+.stats div { display: grid; }
+.stats dt { font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: 56px; line-height: .9; color: var(--gold); }
+.stats dd { margin: 4px 0 0; }
+.more { margin-top: 64px; }
+.more__title { font-size: var(--h); margin-top: 18px; }
+.more__list { list-style: none; margin: 22px 0 0; padding: 0; display: grid; }
+.more__list li { border-top: 1px solid var(--line); padding: 18px 0; font-size: 17px; line-height: 1.5; }
+.more__list li:last-child { border-bottom: 1px solid var(--line); }
+.more__list strong { display: block; font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: 32px; line-height: .95; margin-bottom: 6px; }
+.more__list em { display: block; font-style: normal; font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+
+/* ---------- 08 creative beyond content ---------- */
+.mosaic { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 32vw; gap: 8px; grid-auto-flow: dense; }
+.mosaic > div { border-radius: 4px; }
+.mosaic .t1 { grid-column: span 2; grid-row: span 2; }
+.mosaic .t2 { grid-row: span 2; }
+.mosaic .t5 { grid-column: span 1; }
+.mosaic .t7 { grid-column: span 2; }
+.tile { position: relative; overflow: hidden; background: var(--ink-2); }
+.tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.js .mosaic > div { clip-path: inset(100% 0 0 0); transition: clip-path 1.2s var(--ease-io); transition-delay: calc(var(--i, 0) * 90ms); }
+.js .mosaic.in > div { clip-path: inset(0 0 0 0); }
+
+/* ---------- 09 the people ---------- */
+.team__title { font-size: var(--h); margin-top: 28px; }
+.team__side { display: grid; gap: 24px; margin-top: 28px; }
+.team__side p { font-size: clamp(19px, 5.2vw, 24px); line-height: 1.38; }
+
+/* ---------- 11 trusted by ---------- */
+.clients { overflow: hidden; }
+.marquee { margin-top: 32px; display: grid; gap: 4px; }
+.mrow { display: flex; width: max-content; }
+.marquee.run .mrow { animation: tik 80s linear infinite; }
+.marquee.run .mrow.rev { animation-direction: reverse; animation-duration: 95s; }
+.marquee.run .mrow:active, .marquee.run:hover .mrow { animation-play-state: paused; }
+@keyframes tik { to { transform: translateX(-50%); } }
+.strip { display: flex; align-items: center; white-space: nowrap; }
+.strip span { font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: clamp(34px, 9.5vw, 84px); line-height: 1.14; padding: 0 .28em; color: var(--bone); }
+.strip span:nth-of-type(even) { color: var(--gold); }
+.strip i { flex: none; width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg); }
+
+/* ---------- 12 closing ---------- */
+.contact { overflow: hidden; padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+.contact__q { font-size: var(--h); margin-top: 28px; }
+.contact__row { display: grid; gap: 28px; margin-top: 20px; }
+.contact__a { font-size: var(--h); }
+.magnet { position: relative; width: 156px; aspect-ratio: 1; border-radius: 50%; border: 1.5px solid var(--gold); color: var(--gold); display: grid; place-items: center; text-align: center;
+  font-family: var(--f-mono); font-size: 13px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; transition: background .4s, color .4s, border-color .4s, transform .4s var(--ease-out); }
+.magnet span { pointer-events: none; display: block; padding: 0 18px; }
+.magnet:active { transform: scale(.95); border-color: var(--bone); color: var(--bone); }
+.cblock { margin-top: 56px; border-top: 1px solid var(--line); padding-top: 18px; }
+.cblock__name { font-size: 24px; }
+.clines { margin: 14px 0 0; display: grid; }
+.cline { display: grid; gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.cline dt { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ash); }
+.cline dd { margin: 0; }
+.cline a { display: inline-flex; align-items: center; min-height: 44px; font-size: 20px; overflow-wrap: anywhere; position: relative; }
+.wordmark { display: flex; justify-content: space-between; margin-top: 40px; font-size: clamp(90px, 31vw, 620px); line-height: .76; padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); user-select: none; }
+.wordmark span { display: block; transform-origin: 50% 100%; transform: scaleY(var(--s, 1)); font-variation-settings: "wdth" var(--wd, 62), "wght" var(--wg, 860); }
+
+/* sticky WhatsApp bar (phones) */
+.mbar { position: fixed; z-index: 58; left: 0; right: 0; bottom: 0; display: flex; gap: 8px;
+  padding: 18px max(12px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(180deg, rgba(8,8,8,0), rgba(8,8,8,.94) 45%);
+  transform: translateY(115%); transition: transform .5s var(--ease-out); pointer-events: none; }
+.mbar.on { transform: none; pointer-events: auto; }
+.mbar a { min-height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 100px; }
+.mbar__wa { flex: 1; border: 1.5px solid var(--gold); background: rgba(8,8,8,.85); color: var(--gold); font-weight: 760; font-size: 16px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.mbar__mail { flex: 0 0 52px; border: 1px solid rgba(245,240,231,.25); background: rgba(8,8,8,.7); color: var(--bone); }
+.mbar svg { width: 20px; height: 20px; flex: none; }
+
+/* ================= larger screens ================= */
+@media (min-width: 640px) {
+  .steps { grid-template-columns: 1fr 1fr; gap: 36px 28px; }
+  .mosaic { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 22vw; }
+  .mosaic .t5 { grid-column: span 2; }
+  .mosaic .t7 { grid-column: span 1; }
+  .contact__row { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  .clines { grid-template-columns: 1fr 1fr; column-gap: 32px; }
+  .pillars ul { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 761px) {
+  .menu { grid-template-columns: 1.3fr 1fr; }
+  .menu__media { display: block; }
+  .tik__card { width: clamp(200px, 22vw, 300px); }
+  .work__list { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px 32px; }
+  .proj__name { font-size: clamp(36px, 5.4vw, 92px); }
+  .proj:nth-child(even) { margin-top: 120px; }
+  .mbar { display: none; }
+  .contact { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (min-width: 900px) {
+  .eyebrow, .mono, .chips li { font-size: 11px; }
+  .sec { padding-top: clamp(120px, 16vh, 200px); padding-bottom: clamp(90px, 12vh, 160px); }
+  .nav { padding-top: calc(18px + env(safe-area-inset-top, 0px)); padding-bottom: 18px; }
+  .nav__mid { display: flex; gap: 26px; }
+  .nav__mid a { font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; position: relative; }
+  .nav__mid a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: right; transition: transform .6s var(--ease-out); }
+  .nav__mid a:hover::after, .nav__mid a.on::after { transform: scaleX(1); transform-origin: left; }
+  .nav__mid a.on { color: var(--gold-light); }
+  .nav__logo { font-size: 21px; } .nav__logo .kmark { height: 30px; }
+  .menu__links a { font-size: clamp(30px, 5.6vh, 64px); }
+  .who__body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; margin-top: 60px; align-items: center; }
+  .who__lead { grid-column: 1 / span 7; margin-top: 0; }
+  .who__globe { grid-column: 7 / span 6; margin-top: 0; }
+  .caps { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 56px; }
+  .caps li { font-size: 19px; }
+  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 80px; }
+  .steps li { grid-template-columns: 1fr; }
+  .steps__n { grid-row: auto; }
+  /* production: the frame grows as you scroll, the headline slides behind it */
+  .reel > .wrap { top: clamp(96px, 12vh, 160px); }
+  .reel__type .l2 { text-align: right; }
+  .reel__tags { bottom: 28px; }
+  .reel__btn { width: 120px; height: 120px; }
+  .reel__play:hover .reel__btn { transform: scale(1.1); border-color: var(--gold); color: var(--gold); }
+  .mosaic { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 15vw; gap: 12px; }
+  .team__body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+  .team__side { margin-top: 0; }
+  .phil__txt { text-align: center; }
+  .magnet { width: clamp(160px, 15vw, 220px); }
+  .magnet:hover { border-color: var(--bone); color: var(--bone); }
+  .contact__a { text-align: right; }
+  .clines { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+  .cline { border-bottom: 0; }
+  .cline a { font-size: clamp(16px, 1.4vw, 22px); }
+  .grain { display: block; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .cursor { display: block; }
+  .has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
+  .menu__links a:hover .display { transform: translateX(20px); color: var(--gold); }
+  .chips li:hover { border-color: var(--gold-line); color: var(--gold-light); }
+  .caps li { transition: color .35s, padding-left .5s var(--ease-out); }
+  .caps li:hover { color: var(--gold-light); padding-left: 8px; }
+  .strip span:hover { color: var(--gold); -webkit-text-stroke-color: var(--gold); }
+  .cline a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: var(--gold); transform: scaleX(.12); transform-origin: left; transition: transform .7s var(--ease-out); }
+  .cline a:hover::after { transform: scaleX(1); }
+  .menu__foot a:hover { color: var(--bone); }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
+  .grain { display: none !important; }
+  .mrow { width: auto; flex-wrap: wrap; } .strip { flex-wrap: wrap; white-space: normal; } .strip[aria-hidden] { display: none; }
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Loader -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__mark">
+    <svg class="kmark kmark--loader" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>
+    <span class="wordmark-sm"><b>Kebbe</b> Media</span>
+  </div>
+  <i class="loader__bar"></i>
+</div>
+
+<!-- Navigation -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top" aria-label="Kebbe Media"><svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg><span class="wordmark-sm"><b>Kebbe</b> Media</span></a>
+  <nav class="nav__mid">
+    <a href="#what" data-sec="what">What We Do</a>
+    <a href="#how" data-sec="how">How We Work</a>
+    <a href="#production" data-sec="production">Production</a>
+    <a href="#work" data-sec="work">Selected Work</a>
+    <a href="#trusted" data-sec="trusted">Trusted By</a>
+  </nav>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span class="menu-btn__icon" aria-hidden="true"></span></button>
+</header>
+
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="menu__scroll">
+    <nav class="menu__links">
+      <a href="#top"><span class="mono">01</span><span class="display">Kebbe Media</span></a>
+      <a href="#film"><span class="mono">02</span><span class="display">Showreel</span></a>
+      <a href="#who"><span class="mono">03</span><span class="display">Who We Are</span></a>
+      <a href="#what"><span class="mono">04</span><span class="display">What We Do</span></a>
+      <a href="#kebbe"><span class="mono">05</span><span class="display">This Is Kebbe</span></a>
+      <a href="#how"><span class="mono">06</span><span class="display">How We Work</span></a>
+      <a href="#production"><span class="mono">07</span><span class="display">Production</span></a>
+      <a href="#work"><span class="mono">08</span><span class="display">Selected Work</span></a>
+      <a href="#beyond"><span class="mono">09</span><span class="display">Creative Beyond Content</span></a>
+      <a href="#people"><span class="mono">10</span><span class="display">The People</span></a>
+      <a href="#trusted"><span class="mono">11</span><span class="display">Trusted By</span></a>
+      <a href="#closing"><span class="mono">12</span><span class="display">Closing</span></a>
+    </nav>
+    <div class="menu__foot">
+      <a href="https://wa.me/97338440036" target="_blank" rel="noopener">+973 3844 0036</a>
+      <a href="mailto:info@kebbemedia.com">info@kebbemedia.com</a>
+      <a href="https://www.instagram.com/kebbemedia" target="_blank" rel="noopener">instagram.com/kebbemedia</a>
+      <a href="https://www.linkedin.com/company/kebbemedia" target="_blank" rel="noopener">linkedin.com/company/kebbemedia</a>
+    </div>
+  </div>
+  <div class="menu__media"><video muted loop playsinline preload="none" data-src="media/studio.mp4" poster="media/studio.jpg" aria-hidden="true"></video></div>
+</div>
+
+<nav class="mbar" id="mbar" aria-label="Kebbe Media">
+  <a class="mbar__wa" href="https://wa.me/97338440036" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>Start a project →</a>
+  <a class="mbar__mail" href="mailto:info@kebbemedia.com" aria-label="info@kebbemedia.com"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6"/></svg></a>
+</nav>
+<div class="cursor" id="cursor" aria-hidden="true"><div class="cursor__dot"></div></div>
+<div class="grain" id="grain" aria-hidden="true"></div>
+
+<main id="main">
+
+<!-- 01 — Opening: brand statement -->
+<section class="phil" id="top" aria-labelledby="heroTitle">
+  <div class="phil__stage" id="philStage">
+    <canvas class="phil__gl" id="philGl" aria-hidden="true"></canvas>
+    <svg class="kmark phil__fallback" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>
+    <div class="phil__label"><div class="sec__head"><span class="eyebrow num">01</span><span class="eyebrow">Kebbe Media</span></div></div>
+    <h1 class="phil__txt" id="heroTitle"><span class="sr">Kebbe Media. </span>
+      <span class="display" style="--k:0">Creative. Media. Production.</span>
+      <span class="display" style="--k:1">Bahrain · KSA · GCC · <span class="phil__beyond">Beyond</span></span>
+    </h1>
+  </div>
+</section>
+
+<!-- 02 — Showreel -->
+<section class="film" id="film" aria-label="Showreel">
+  <img class="film__poster" id="heroPoster" src="media/hero-tall.jpg" alt="" aria-hidden="true" loading="lazy">
+  <video class="film__video" id="heroVideo" muted loop playsinline preload="none" poster="media/hero-tall.jpg" aria-hidden="true"></video>
+  <div class="film__shade"></div>
+  <div class="film__label wrap"><div class="sec__head"><span class="eyebrow num">02</span><span class="eyebrow">Showreel</span></div></div>
+</section>
+
+<!-- 02 — Who We Are -->
+<section class="sec who" id="who" aria-labelledby="whoTitle">
+  <div class="how__scroll who__scroll" id="whoScroll">
+  <div class="how__stage" id="whoStage">
+    <div class="reel__frame"><video muted loop playsinline preload="none" data-auto data-src="media/who-tall.mp4" poster="media/who-tall.jpg" id="whoVideo" aria-hidden="true"></video></div>
+    <div class="reel__veil" aria-hidden="true"></div>
+    <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">03</span><span class="eyebrow">Who We Are</span></div></div>
+    <div class="reel__type">
+      <h2 class="who__statement display" id="whoTitle" data-words>We create what people <span class="serif">notice.</span></h2>
+      <p class="who__lead">We build brands, create content and produce experiences that people notice.</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- 03 — What We Do -->
+<section class="sec what" id="what" aria-labelledby="whatTitle">
+  <div class="how__scroll what__scroll" id="whatScroll">
+  <div class="how__stage" id="whatStage">
+    <div class="reel__frame what__frame">
+      <img class="what__img what__img--1" src="media/what-1.webp" alt="" loading="lazy" decoding="async">
+      <img class="what__img what__img--2" src="media/what-2.webp" alt="" loading="lazy" decoding="async">
+    </div>
+    <div class="reel__veil" aria-hidden="true"></div>
+    <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">04</span><span class="eyebrow">What We Do</span></div></div>
+    <h2 class="display reel__type rv" id="whatTitle"><span class="ln"><span>What We <span class="serif">Do</span></span></span></h2>
+  </div>
+  </div>
+  <div class="wrap">
+  <div class="caps">
+    <div class="fade" style="--i:0"><h3>Brand</h3><ul><li>Branding</li><li>Creative Direction</li><li>Campaigns</li></ul></div>
+    <div class="fade" style="--i:1"><h3>Content</h3><ul><li>Photography</li><li>Videography</li><li>Content Creation</li><li>Design</li><li>Motion</li></ul></div>
+    <div class="fade" style="--i:2"><h3>Digital</h3><ul><li>Social Media</li><li>Digital Campaigns</li><li>Web</li><li>WhatsApp Business</li></ul></div>
+    <div class="fade" style="--i:3"><h3>Production</h3><ul><li>Events</li><li>Multi-camera</li><li>Interviews</li><li>Editing</li><li>Post-production</li></ul></div>
+  </div>
+  </div>
+</section>
+
+<!-- 04 — This Is Kebbe -->
+<section class="sec kebbe-reels" id="kebbe" aria-labelledby="tikTitle">
+  <div class="wrap">
+    <div class="sec__head"><span class="eyebrow num">05</span></div>
+    <h2 class="display sec__title rv" id="tikTitle"><span class="ln"><span>Work that makes you</span></span><span class="ln" style="--i:1"><span class="serif">pull out the chair.</span></span></h2>
+  </div>
+  <div class="tik" id="tik"></div>
+</section>
+
+<!-- 05 — How We Work -->
+<section class="sec process" id="how" aria-labelledby="procTitle">
+  <div class="how__scroll" id="howScroll">
+  <div class="how__stage" id="howStage">
+    <div class="reel__frame"><video muted loop playsinline preload="none" data-auto data-src="media/how.mp4" poster="media/how.jpg" aria-hidden="true"></video></div>
+    <div class="reel__veil" aria-hidden="true"></div>
+    <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">06</span><span class="eyebrow">How We Work</span></div></div>
+  <h2 class="display process__title reel__type rv" id="procTitle">
+    <span class="ln"><span>Think. Create.</span></span>
+    <span class="ln" style="--i:1"><span>Produce. <span class="serif">Launch</span></span></span>
+    <span class="ln" style="--i:2"><span>&amp; Amplify.</span></span>
+  </h2>
+  </div>
+  </div>
+</section>
+
+<!-- 06 — Production -->
+<section class="sec reel" id="production" aria-labelledby="reelTitle">
+  <div class="wrap"><div class="sec__head"><span class="eyebrow num">07</span><span class="eyebrow">Production</span></div></div>
+  <div class="reel__stage" id="reelStage">
+    <div class="reel__veil" aria-hidden="true"></div>
+    <h2 class="reel__type" id="reelTitle">
+      <span class="display l1">From the first idea</span>
+      <span class="display l2"><span class="serif">to the final frame.</span></span>
+    </h2>
+      <div class="reel__frame" id="reelFrame">
+        <video muted loop playsinline preload="none" poster="media/prod.jpg" data-src="media/prod-teaser.mp4" id="reelTeaser" aria-hidden="true"></video>
+        <button class="reel__play" id="reelPlay" aria-label="Production">
+          <span class="reel__btn" aria-hidden="true"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg></span>
+        </button>
+      </div>
+    <ul class="chips reel__tags" id="reelTags"><li>Photography</li><li>Videography</li><li>Multi-camera</li><li>Events</li><li>Interviews</li><li>Behind the scenes</li><li>Editing</li><li>Motion</li><li>VFX</li><li>Post-production</li></ul>
+  </div>
+</section>
+
+<div class="player" id="player" role="dialog" aria-modal="true" aria-label="Production">
+  <video id="playerVideo" playsinline controls preload="none" poster="media/prod.jpg"></video>
+  <button class="player__close" id="playerClose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2 2 14" stroke="currentColor" stroke-width="1.6"/></svg></button>
+</div>
+
+<!-- 07 — Selected Work -->
+<section class="sec work wrap" id="work" aria-labelledby="workTitle">
+  <div class="sec__head"><span class="eyebrow num">08</span></div>
+  <h2 class="display sec__title rv" id="workTitle"><span class="ln"><span>Selected <span class="serif">Work</span></span></span></h2>
+  <ol class="work__list">
+    <li class="proj">
+      <div class="proj__head"><span class="mono proj__num">01 —</span><h3 class="display proj__name">Ferrari × Euro Motors</h3><span class="mono proj__tags">Big Production · Premium Brand</span></div>
+      <div class="proj__media"><video muted loop playsinline preload="none" data-auto data-src="media/ferrari.mp4" poster="media/ferrari.jpg" aria-hidden="true"></video></div>
+      <p class="proj__desc">Purosangue reveal: event coverage, cinematic highlight reels, photography and campaign visuals, extended through social storytelling. Plus the Passion campaign.</p>
+    </li>
+    <li class="proj">
+      <div class="proj__head"><span class="mono proj__num">02 —</span><h3 class="display proj__name">Layali Fairuz</h3><span class="mono proj__tags">Corporate · Large-Scale Event Production</span></div>
+      <div class="proj__media"><video muted loop playsinline preload="none" data-auto data-src="media/layali.mp4" poster="media/layali.jpg" aria-hidden="true"></video></div>
+      <p class="proj__desc">Indoor and outdoor photography across keynotes, awards and exhibition floors, with a dedicated sound engineer and edited assets ready for press and social.</p>
+    </li>
+    <li class="proj">
+      <div class="proj__head"><span class="mono proj__num">03 —</span><h3 class="display proj__name">Touchdown</h3><span class="mono proj__tags">Social Media + Content Creation</span></div>
+      <div class="proj__media"><video muted loop playsinline preload="none" data-auto data-src="media/touchdown.mp4" poster="media/touchdown.jpg" aria-hidden="true"></video></div>
+      <p class="proj__desc">Social media and content creation, plus invites and prints, in Arabic and English.</p>
+      <dl class="stats"><div><dt>57</dt><dd class="eyebrow">Posts</dd></div><div><dt>16</dt><dd class="eyebrow">Videos</dd></div><div><dt>Daily</dt><dd class="eyebrow">Stories</dd></div></dl>
+    </li>
+    <li class="proj">
+      <div class="proj__head"><span class="mono proj__num">04 —</span><h3 class="display proj__name">Piani Restobar</h3><span class="mono proj__tags">Digital · Social Media · WhatsApp Business · Guest Communication · Events</span></div>
+      <div class="proj__media"><video muted loop playsinline preload="none" data-auto data-src="media/piani-dinner.mp4" poster="media/piani-dinner.jpg" aria-hidden="true"></video></div>
+      <p class="proj__desc">Digital, social, WhatsApp Business and guest communication, with campaign visuals and full event coverage.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- 08 — Creative Beyond Content -->
+<section class="sec beyond wrap" id="beyond" aria-labelledby="beyondTitle">
+  <div class="sec__head"><span class="eyebrow num">09</span></div>
+  <h2 class="display sec__title rv" id="beyondTitle"><span class="ln"><span>Creative</span></span><span class="ln" style="--i:1"><span class="serif">Beyond Content</span></span></h2>
+  <div class="mosaic" id="mosaic" aria-hidden="true">
+    <div class="tile t1" style="--i:0"><img src="media/beyond-1.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="tile t2" style="--i:1"><img src="media/beyond-2.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="tile t3" style="--i:2"><img src="media/beyond-3.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="tile t4" style="--i:3"><img src="media/beyond-4.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="tile t5" style="--i:4"><img src="media/beyond-5.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="tile t6" style="--i:5"><img src="media/beyond-6.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="tile t7" style="--i:6"><img src="media/beyond-7.webp" alt="" loading="lazy" decoding="async"></div>
+  </div>
+</section>
+
+<!-- 09 — The People -->
+<section class="sec team wrap" id="people" aria-labelledby="teamTitle">
+  <div class="sec__head"><span class="eyebrow num">10</span><span class="eyebrow">The People</span></div>
+  <div class="team__body">
+    <h2 class="display team__title rv" id="teamTitle"><span class="ln"><span>One team.</span></span><span class="ln" style="--i:1"><span><span class="serif">Many</span> specialists.</span></span></h2>
+    <div class="team__side fade">
+      <ul class="chips"><li>Strategy</li><li>Creative</li><li>Design</li><li>Copy</li><li>Photo</li><li>Video</li><li>Editing</li><li>Motion</li><li>Social</li></ul>
+      <p>Built around the project. Powered by the right people.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 — Trusted By -->
+<section class="sec clients" id="trusted" aria-labelledby="clientsTitle">
+  <div class="wrap">
+    <div class="sec__head"><span class="eyebrow num">11</span></div>
+    <h2 class="display sec__title rv" id="clientsTitle"><span class="ln"><span>Trusted <span class="serif">By</span></span></span></h2>
+  </div>
+  <div class="marquee" id="marquee"></div>
+</section>
+
+<!-- 12 — Closing -->
+<footer class="sec contact wrap" id="closing" aria-labelledby="contactTitle">
+  <div class="sec__head"><span class="eyebrow num">12</span></div>
+  <h2 class="contact__q display rv" id="contactTitle">
+    <span class="ln"><span>Have an</span></span>
+    <span class="ln" style="--i:1"><span class="serif">idea?</span></span>
+  </h2>
+  <div class="contact__row">
+    <p class="contact__a display rv"><span class="ln"><span>Let's make</span></span><span class="ln" style="--i:1"><span>it real.</span></span></p>
+    <a class="magnet" href="https://wa.me/97338440036" target="_blank" rel="noopener" data-magnet="0.45"><span>Start a project →</span></a>
+  </div>
+  <div class="cblock">
+    <p class="cblock__name wordmark-sm"><b>Kebbe</b> Media</p>
+    <dl class="clines">
+      <div class="cline"><dt>Bahrain:</dt><dd><a href="tel:+97338440036">+973 3844 0036</a></dd></div>
+      <div class="cline"><dt>Saudi Arabia:</dt><dd><a href="tel:+966558562358">+966 558562358</a></dd></div>
+      <div class="cline"><dt>Email:</dt><dd><a href="mailto:info@kebbemedia.com">info@kebbemedia.com</a></dd></div>
+      <div class="cline"><dt>LinkedIn:</dt><dd><a href="https://www.linkedin.com/company/kebbemedia" target="_blank" rel="noopener">linkedin.com/company/kebbemedia</a></dd></div>
+      <div class="cline"><dt>Instagram:</dt><dd><a href="https://www.instagram.com/kebbemedia" target="_blank" rel="noopener">instagram.com/kebbemedia</a></dd></div>
+    </dl>
+  </div>
+</footer>
+
+</main>
+
+<script>
+const KGL = (() => {
+  const DPR = () => Math.min(window.devicePixelRatio || 1, 2);
+
+  function ctx(canvas, opts = {}) {
+    let gl = null;
+    try { gl = canvas.getContext('webgl', Object.assign({ antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: 'high-performance' }, opts)); } catch (e) { gl = null; }
+    return gl;
+  }
+  function program(gl, vs, fs) {
+    const sh = (t, s) => {
+      const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x);
+      if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(x)); return null; }
+      return x;
+    };
+    const v = sh(gl.VERTEX_SHADER, vs), f = sh(gl.FRAGMENT_SHADER, fs);
+    if (!v || !f) return null;
+    const p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f); gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.warn(gl.getProgramInfoLog(p)); return null; }
+    const u = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+    for (let i = 0; i < n; i++) { const info = gl.getActiveUniform(p, i); u[info.name] = gl.getUniformLocation(p, info.name); }
+    const a = {}; const na = gl.getProgramParameter(p, gl.ACTIVE_ATTRIBUTES);
+    for (let i = 0; i < na; i++) { const info = gl.getActiveAttrib(p, i); a[info.name] = gl.getAttribLocation(p, info.name); }
+    return { p, u, a };
+  }
+  function buffer(gl, data) { const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); return b; }
+  function attr(gl, loc, buf, size) { if (loc < 0) return; gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, 0); }
+  function fit(canvas, gl, scale = 1) {
+    const r = canvas.getBoundingClientRect();
+    const w = Math.max(2, Math.round(r.width * DPR() * scale)), h = Math.max(2, Math.round(r.height * DPR() * scale));
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    gl.viewport(0, 0, w, h);
+    return { w, h, cw: r.width, ch: r.height };
+  }
+  function texture(gl) {
+    const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([20, 18, 16, 255]));
+    return t;
+  }
+  function perspective(fov, aspect, near, far) {
+    const f = 1 / Math.tan(fov / 2), nf = 1 / (near - far);
+    return new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]);
+  }
+  const QUAD = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
+
+  /* ---------------- B. PHILOSOPHY: particle installation ---------------- */
+  const PART_VS = `
+precision highp float;
+attribute vec3 a; attribute vec3 b; attribute vec4 r;
+uniform float P; uniform float T; uniform mat4 PM; uniform vec2 M; uniform float D; uniform float SC;
+varying float vA; varying float vH; varying float vK;
+mat2 rot(float x){ float c=cos(x), s=sin(x); return mat2(c,-s,s,c); }
+void main(){
+  float k=smoothstep(.14+r.z*.28, .5+r.z*.18, P);
+  vec3 s=a;
+  s.xz=rot(T*.04*(.5+r.x)+P*2.4)*s.xz;
+  s+=.18*vec3(sin(T*.5+r.x*30.), cos(T*.45+r.y*20.), sin(T*.4+r.x*12.));
+  vec3 tgt=b*SC;
+  tgt+=.012*vec3(sin(T*1.3+r.x*50.), cos(T*1.1+r.y*40.), 0.);
+  vec3 pos=mix(s,tgt,k);
+  float e=smoothstep(.88,1.,P);
+  pos+=normalize(vec3(pos.xy,.4)+.001)*e*(.3+r.y*1.4);
+  vec3 c=pos;
+  c.xz=rot(M.x*.22+(1.-k)*.5)*c.xz; c.yz=rot(-M.y*.14)*c.yz;
+  c.z-=6.;
+  gl_Position=PM*vec4(c,1.);
+  gl_PointSize=(r.y*2.6+1.6)*D*(6./-c.z)*(1.+(1.-k)*.7);
+  vA=mix(.3,1.,k)*(.6+.4*r.x)*(1.-e*.6);
+  vH=r.w; vK=k;
+}`;
+  const PART_FS = `
+precision highp float;
+varying float vA; varying float vH; varying float vK; uniform float T;
+void main(){
+  vec2 q=gl_PointCoord-.5; float d=length(q);
+  float m=smoothstep(.5,.15,d);
+  vec3 bone=vec3(.93,.91,.87);
+  vec3 gold=mix(vec3(.97,.66,.06), vec3(.99,.93,.78), vH);
+  vec3 col=mix(bone, gold, vK*.9);
+  gl_FragColor=vec4(col*m*vA, m*vA);
+}`;
+
+  const KPATHS = ['M0 0H140Q158 0 158 18V580H0Z', 'M158 15V405L338 690Q358 718 392 718H583Z', 'M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z'];
+  function markTargets(n) {
+    const c = document.createElement('canvas'); const W = 600, H = 740; c.width = W; c.height = H;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.translate(8, 11);
+    const pts = [];
+    KPATHS.forEach((d, layer) => {
+      x.clearRect(-8, -11, W, H); x.fillStyle = '#fff'; x.fill(new Path2D(d));
+      const px = x.getImageData(0, 0, W, H).data;
+      for (let y = 0; y < H; y += 3) for (let xx = 0; xx < W; xx += 3) if (px[(y * W + xx) * 4 + 3] > 128) pts.push(xx, y, layer);
+    });
+    const out = new Float32Array(n * 3), s = 2.3 / 718;
+    for (let i = 0; i < n; i++) {
+      const j = Math.floor(Math.random() * (pts.length / 3)) * 3;
+      out[i * 3] = (pts[j] + Math.random() * 3 - 300) * s;
+      out[i * 3 + 1] = -(pts[j + 1] + Math.random() * 3 - 370) * s + .42;
+      out[i * 3 + 2] = (pts[j + 2] - 1) * .16 + (Math.random() - .5) * .08;
+    }
+    return out;
+  }
+
+  function particles(canvas, font) {
+    const gl = ctx(canvas, { premultipliedAlpha: true }); if (!gl) return null;
+    const pr = program(gl, PART_VS, PART_FS); if (!pr) return null;
+    const N = innerWidth < 760 ? 12000 : 30000;
+    const A = new Float32Array(N * 3), Rr = new Float32Array(N * 4);
+    for (let i = 0; i < N; i++) {
+      const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, rad = 2.2 + Math.pow(Math.random(), .6) * 3.2;
+      const sq = Math.sqrt(1 - u * u);
+      A[i * 3] = sq * Math.cos(th) * rad * 1.5; A[i * 3 + 1] = u * rad * .8; A[i * 3 + 2] = sq * Math.sin(th) * rad - 1.;
+      Rr[i * 4] = Math.random(); Rr[i * 4 + 1] = Math.pow(Math.random(), 3); Rr[i * 4 + 2] = Math.random(); Rr[i * 4 + 3] = Math.random();
+    }
+    const bA = buffer(gl, A), bR = buffer(gl, Rr);
+    let bB = buffer(gl, markTargets(N));
+    const st = { mx: 0, my: 0, tx: 0, ty: 0, p: 0 };
+    return {
+      gl,
+      retarget() { },
+      pointer(nx, ny) { st.tx = nx; st.ty = ny; },
+      render(time, dt, prog) {
+        const { w, h } = fit(canvas, gl, 1);
+        st.mx += (st.tx - st.mx) * Math.min(1, dt * 3); st.my += (st.ty - st.my) * Math.min(1, dt * 3);
+        st.p += (prog - st.p) * Math.min(1, dt * 5);
+        const aspect = w / h;
+        gl.useProgram(pr.p);
+        attr(gl, pr.a.a, bA, 3); attr(gl, pr.a.b, bB, 3); attr(gl, pr.a.r, bR, 4);
+        gl.uniformMatrix4fv(pr.u.PM, false, perspective(35 * Math.PI / 180, aspect, .1, 50));
+        gl.uniform1f(pr.u.P, st.p); gl.uniform1f(pr.u.T, time); gl.uniform2f(pr.u.M, st.mx, st.my);
+        gl.uniform1f(pr.u.D, DPR()); gl.uniform1f(pr.u.SC, Math.min(1, aspect * .82));
+        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
+        gl.drawArrays(gl.POINTS, 0, N);
+      }
+    };
+  }
+
+  /* ---------------- C. PRESENCE: dotted globe ---------------- */
+  const GLOBE_VS = `
+precision highp float;
+attribute vec3 a; attribute vec3 r;   // r: size, type(0 dot,1 marker,2 arc), param
+uniform mat4 PM; uniform vec2 ROT; uniform float T; uniform float D; uniform float SEL;
+varying float vA; varying float vT; varying float vF;
+void main(){
+  vec3 p=a;
+  float cy=cos(ROT.x), sy=sin(ROT.x); p=vec3(cy*p.x+sy*p.z, p.y, -sy*p.x+cy*p.z);
+  float cx=cos(ROT.y), sx=sin(ROT.y); p=vec3(p.x, cx*p.y-sx*p.z, sx*p.y+cx*p.z);
+  float front=smoothstep(-.35,.6,p.z);
+  vec3 c=p; c.z-=2.75;
+  gl_Position=PM*vec4(c,1.);
+  float sz=r.x;
+  if(r.y>1.5){ float pulse=fract(T*.35+r.z*0.)-r.z; float k=exp(-pulse*pulse*600.); sz*=1.+k*2.5; vA=(.35+k*1.2)*front; }
+  else if(r.y>.5){ float on=step(abs(r.z-SEL),.1); sz*=1.+on*.6+.15*sin(T*3.); vA=(.8+.2*on)*max(front,.2); }
+  else { vA=(.14+.7*front)*(.55+r.z*.9); }
+  gl_PointSize=sz*D*(2.75/-c.z);
+  vT=r.y; vF=front;
+}`;
+  const GLOBE_FS = `
+precision highp float; varying float vA; varying float vT; varying float vF; uniform float T;
+void main(){
+  vec2 q=gl_PointCoord-.5; float d=length(q);
+  float m = vT>.5 && vT<1.5 ? smoothstep(.5,.0,d)+smoothstep(.5,.42,d)*.0 : smoothstep(.5,.2,d);
+  vec3 bone=vec3(.93,.91,.87);
+  vec3 gold=vec3(.97,.70,.1);
+  vec3 col = vT>1.5 ? gold : (vT>.5 ? vec3(1.,.85,.45) : bone);
+  if(vT>.5 && vT<1.5){ float ring=smoothstep(.06,.0,abs(d-.38)); m=max(smoothstep(.2,.05,d), ring*.9); }
+  gl_FragColor=vec4(col*m*vA, m*vA);
+}`;
+  const LL = (lat, lon) => { const la = lat * Math.PI / 180, lo = lon * Math.PI / 180; return [Math.cos(la) * Math.sin(lo), Math.sin(la), Math.cos(la) * Math.cos(lo)]; };
+  const MARKETS = [[26.2285, 50.586], [24.7136, 46.6753]];
+
+  function globe(canvas) {
+    const gl = ctx(canvas); if (!gl) return null;
+    const pr = program(gl, GLOBE_VS, GLOBE_FS); if (!pr) return null;
+    const P = [], R = [];
+    const N = innerWidth < 760 ? 2600 : 4200, ga = Math.PI * (3 - Math.sqrt(5));
+    const home = LL(26.2, 46);
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (i / (N - 1)) * 2, rad = Math.sqrt(1 - y * y), th = ga * i;
+      const x = Math.cos(th) * rad, z = Math.sin(th) * rad;
+      const near = Math.max(0, x * home[0] + y * home[1] + z * home[2]);
+      P.push(x, y, z); R.push(2.2 + Math.pow(near, 8) * 1.8, 0, Math.pow(near, 6));
+    }
+    // arcs from Manama
+    const m0 = LL(...MARKETS[0]);
+    [1].forEach((mi, ai) => {
+      const m1 = LL(...MARKETS[mi]); const S = 70;
+      const om = Math.acos(Math.min(1, m0[0] * m1[0] + m0[1] * m1[1] + m0[2] * m1[2]));
+      for (let s = 0; s <= S; s++) {
+        const t = s / S, a = Math.sin((1 - t) * om) / Math.sin(om), b = Math.sin(t * om) / Math.sin(om);
+        const lift = 1 + Math.sin(Math.PI * t) * (.09 + ai * .05);
+        P.push((a * m0[0] + b * m1[0]) * lift, (a * m0[1] + b * m1[1]) * lift, (a * m0[2] + b * m1[2]) * lift);
+        R.push(2.2, 2, t);
+      }
+    });
+    MARKETS.forEach((m, i) => { P.push(...LL(...m).map(v => v * 1.004)); R.push(22, 1, i); });
+    const count = P.length / 3;
+    const bP = buffer(gl, new Float32Array(P)), bR = buffer(gl, new Float32Array(R));
+    const st = { sel: 0, rx: 0, ry: 0, tx: 0, ty: 0, drag: 0 };
+    const target = (i) => { const [lat, lon] = MARKETS[i]; st.tx = -lon * Math.PI / 180 + .08; st.ty = lat * Math.PI / 180 - .05; };
+    target(0); st.rx = st.tx - .5; st.ry = st.ty;
+    return {
+      gl,
+      select(i) { st.sel = i; target(i); },
+      render(time, dt) {
+        const { w, h } = fit(canvas, gl, 1);
+        st.rx += (st.tx + Math.sin(time * .15) * .12 - st.rx) * Math.min(1, dt * 2.2);
+        st.ry += (st.ty + Math.cos(time * .12) * .05 - st.ry) * Math.min(1, dt * 2.2);
+        gl.useProgram(pr.p);
+        attr(gl, pr.a.a, bP, 3); attr(gl, pr.a.r, bR, 3);
+        gl.uniformMatrix4fv(pr.u.PM, false, perspective(38 * Math.PI / 180, w / h, .1, 20));
+        gl.uniform2f(pr.u.ROT, st.rx, st.ry); gl.uniform1f(pr.u.T, time); gl.uniform1f(pr.u.D, DPR()); gl.uniform1f(pr.u.SEL, st.sel);
+        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.drawArrays(gl.POINTS, 0, count);
+      }
+    };
+  }
+
+  return { particles, globe };
+})();
+
+/* ============================================================
+   KEBBE MEDIA — site runtime (no dependencies)
+   ============================================================ */
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const TOUCH = !FINE;
+  const root = document.documentElement;
+  let VH = innerHeight;
+  addEventListener('resize', () => { VH = innerHeight; }, { passive: true });
+  const KSVG = '<svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>';
+
+  /* ---------------- ticker ---------------- */
+  const subs = new Set();
+  let last = performance.now(), T = 0;
+  function frame(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (!RM) T += dt;
+    if (!document.hidden) subs.forEach(f => f(T, dt, now / 1000));
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------------- smooth wheel scroll (mouse only) ---------------- */
+  const SC = { y: scrollY, target: scrollY, on: !RM && FINE, locked: false };
+  const maxY = () => document.documentElement.scrollHeight - innerHeight;
+  if (SC.on) {
+    addEventListener('wheel', e => {
+      if (SC.locked || e.ctrlKey) return;
+      e.preventDefault();
+      let d = e.deltaY; if (e.deltaMode === 1) d *= 36; else if (e.deltaMode === 2) d *= innerHeight;
+      SC.target = clamp(SC.target + d, 0, maxY());
+    }, { passive: false });
+    addEventListener('scroll', () => { if (Math.abs(scrollY - SC.y) > 3) SC.y = SC.target = scrollY; }, { passive: true });
+  }
+  subs.add((t, dt) => {
+    if (SC.on && !SC.locked && Math.abs(SC.target - SC.y) > .4) { SC.y += (SC.target - SC.y) * (1 - Math.exp(-dt * 8.5)); window.scrollTo(0, SC.y); }
+    else if (!SC.on || SC.locked) SC.y = SC.target = scrollY;
+  });
+  function scrollToY(y) { y = clamp(y, 0, maxY()); if (SC.on) SC.target = y; else window.scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' }); }
+  const docTop = el => el.getBoundingClientRect().top + scrollY;
+
+  /* ---------------- pointer + cursor ---------------- */
+  const P = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0 };
+  const setP = (x, y) => { P.x = x; P.y = y; P.nx = (x / innerWidth) * 2 - 1; P.ny = -((y / innerHeight) * 2 - 1); };
+  addEventListener('pointermove', e => setP(e.clientX, e.clientY), { passive: true });
+  // phones: the brand-statement particles follow the device's tilt when available, otherwise a slow drift
+  if (TOUCH) {
+    addEventListener('touchmove', e => { const t = e.touches[0]; if (t) setP(t.clientX, t.clientY); }, { passive: true });
+    addEventListener('deviceorientation', e => { if (e.gamma == null) return; P.nx = clamp(e.gamma / 35, -1, 1); P.ny = clamp((45 - e.beta) / 35, -1, 1); P.tilt = true; }, { passive: true });
+    subs.add(t => { if (!P.tilt) { P.nx = Math.sin(t * .35) * .45; P.ny = Math.cos(t * .27) * .25; } });
+  }
+  if (FINE) {
+    const cursor = $('#cursor'); const cur = { x: P.x, y: P.y };
+    root.classList.add('has-cursor');
+    subs.add((t, dt) => { cur.x += (P.x - cur.x) * Math.min(1, dt * 18); cur.y += (P.y - cur.y) * Math.min(1, dt * 18); cursor.style.transform = `translate3d(${cur.x}px, ${cur.y}px, 0)`; });
+    document.addEventListener('pointerover', e => cursor.classList.toggle('is-link', !!e.target.closest('a, button')));
+    const magnets = $$('[data-magnet]');
+    subs.add((t, dt) => magnets.forEach(m => {
+      const r = m.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
+      const dx = P.x - (r.left + r.width / 2), dy = P.y - (r.top + r.height / 2), k = parseFloat(m.dataset.magnet) || .4;
+      const near = Math.hypot(dx, dy) < r.width * 1.1;
+      m._mx = (m._mx || 0) + ((near ? dx * k : 0) - (m._mx || 0)) * Math.min(1, dt * 8);
+      m._my = (m._my || 0) + ((near ? dy * k : 0) - (m._my || 0)) * Math.min(1, dt * 8);
+      m.style.transform = `translate3d(${m._mx.toFixed(2)}px, ${m._my.toFixed(2)}px, 0)`;
+    }));
+    // film grain texture (desktop only)
+    const c = document.createElement('canvas'); c.width = c.height = 180;
+    const x = c.getContext('2d'); const d = x.createImageData(180, 180);
+    for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+    x.putImageData(d, 0, 0); $('#grain').style.backgroundImage = `url(${c.toDataURL()})`;
+  }
+
+  /* ---------------- empty media placeholders: K mark only ---------------- */
+  $$('.ph-empty').forEach(el => { if (el.textContent.trim() === 'KMARK') el.innerHTML = KSVG; });
+
+  /* ---------------- reveals ---------------- */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  $$('.rv, .fade, .proj, .steps li, .mosaic').forEach(el => io.observe(el));
+
+  function splitWords(el) {
+    const out = [];
+    Array.from(el.childNodes).forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(p => {
+          if (!p) return;
+          if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(' ')); return; }
+          const s = document.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); out.push(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) { n.classList.add('w'); out.push(n); }
+    });
+    return out;
+  }
+  const whoTitle = $('[data-words]'); const whoWords = splitWords(whoTitle);
+  const whoScroll = $('#whoScroll'), whoStage = $('#whoStage'), whoVideo = $('#whoVideo');
+  if (innerWidth / innerHeight >= .9) { whoVideo.dataset.src = 'media/who-wide.mp4'; whoVideo.poster = 'media/who-wide.jpg'; }
+  subs.add(() => {
+    const r = whoScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
+    const p = RM ? 1 : clamp((VH * .9 - r.top) / (VH * .9 + (r.height - VH) * .28));
+    whoStage.style.setProperty('--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+    whoWords.forEach((w, i) => { const on = p * whoWords.length * 1.25 - i > .5; if (on !== w._on) { w._on = on; w.classList.toggle('on', on); } });
+  });
+
+  /* ---------------- 02 showreel video (tall on phones, wide on landscape screens) ---------------- */
+  const heroVideo = $('#heroVideo'), heroPoster = $('#heroPoster'), film = $('#film');
+  const hv = innerWidth / innerHeight >= .9 ? 'hero-wide' : 'hero-tall';
+  heroPoster.src = `media/${hv}.jpg`; heroVideo.poster = `media/${hv}.jpg`;
+  new IntersectionObserver(es => {
+    if (es[0].isIntersecting) { if (!heroVideo.getAttribute('src')) { heroVideo.preload = 'auto'; heroVideo.src = `media/${hv}.mp4`; } if (!RM) heroVideo.play().catch(() => { }); }
+    else heroVideo.pause();
+  }, { rootMargin: '60% 0px' }).observe(film);
+  subs.add(() => {
+    const r = film.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
+    film.style.setProperty('--fp', clamp(1 - r.top / VH).toFixed(4));
+  });
+
+  /* ---------------- 01 opening: particles condense into the K on load ---------------- */
+  const phil = $('#top'), philStage = $('#philStage');
+  /* keep "Creative. Media. Production." on one line: size both lines so the first one fits the width */
+  const heroTxt = $('#heroTitle'), heroLines = $$('.display', heroTxt);
+  function fitHero() {
+    heroTxt.style.setProperty('--fit', '100px');
+    const avail = heroTxt.clientWidth, widest = Math.max(...heroLines.map(l => { const r = document.createRange(); r.selectNodeContents(l); return r.getBoundingClientRect().width; }));
+    const cap = Math.min(170, innerWidth * .122, innerHeight * .165);
+    heroTxt.style.setProperty('--fit', Math.min(cap, 100 * avail / widest * .985).toFixed(2) + 'px');
+  }
+  fitHero(); addEventListener('resize', fitHero, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHero);
+  const parts = KGL.particles($('#philGl')) || null;
+  if (!parts) root.classList.add('no-gl');
+  let philVisible = true, introT0 = null;
+  const startIntro = () => { if (introT0 === null) introT0 = performance.now(); };
+  new IntersectionObserver(es => { philVisible = es[0].isIntersecting; }).observe(phil);
+  const easeOut = x => 1 - Math.pow(1 - x, 3);
+  subs.add((t, dt) => {
+    if (!philVisible) return;
+    const a = RM ? .86 : (introT0 === null ? 0 : .86 * easeOut(clamp((performance.now() - introT0) / 3400)));
+    const s = clamp(scrollY / VH);
+    const p = clamp(a + s * .16);
+    philStage.style.setProperty('--p', p.toFixed(4));
+    if (parts) { parts.pointer(P.nx, P.ny); parts.render(t, dt, p); }
+  });
+
+  /* ---------------- loader ---------------- */
+  const loader = $('#loader');
+  const heroReveals = [];
+  if (RM) { loader.classList.add('gone'); startIntro(); }
+  else {
+    requestAnimationFrame(() => loader.classList.add('go'));
+    let shown = 0, ready = false;
+    const markReady = () => { ready = true; };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(markReady);
+    setTimeout(markReady, 2400);
+    const t0 = performance.now(); let prevT = t0;
+    const step = () => {
+      const now = performance.now(), el = now - t0, d = Math.min(.1, (now - prevT) / 1000); prevT = now;
+      const goal = ready ? 100 : Math.min(88, el / 20);
+      shown += (goal - shown) * (1 - Math.exp(-d * 7)); if (ready && el > 1300 && shown > 98.5) shown = 100;
+      loader.style.setProperty('--load', (shown / 100).toFixed(3));
+      if (shown < 100) requestAnimationFrame(step);
+      else setTimeout(() => { loader.classList.add('out'); setTimeout(startIntro, 250); setTimeout(() => loader.classList.add('gone'), 1300); }, 200);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ---------------- nav ---------------- */
+  const nav = $('#nav'); let lastY = scrollY;
+  subs.add(() => { const y = scrollY; if (Math.abs(y - lastY) > 4) { nav.classList.toggle('hide', y > lastY && y > VH * .6 && !root.classList.contains('menu-open')); lastY = y; } });
+  const navLinks = $$('.nav__mid a');
+  const secObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle('on', a.dataset.sec === e.target.id)); }), { rootMargin: '-45% 0px -50% 0px' });
+  navLinks.forEach(a => secObs.observe(document.getElementById(a.dataset.sec)));
+
+  const menuBtn = $('#menuBtn'), menu = $('#menu');
+  function setMenu(open) {
+    root.classList.toggle('menu-open', open);
+    menuBtn.setAttribute('aria-expanded', open);
+    SC.locked = open; document.body.style.overflow = open ? 'hidden' : '';
+    const v = $('video', menu);
+    if (open && innerWidth > 760) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => { }); } else v.pause();
+    if (open) setTimeout(() => $('a', menu).focus({ preventScroll: true }), 450);
+  }
+  menuBtn.addEventListener('click', () => setMenu(!root.classList.contains('menu-open')));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && root.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute('href').slice(1); const el = document.getElementById(id); if (!el) return;
+    e.preventDefault();
+    const wasOpen = root.classList.contains('menu-open'); if (wasOpen) setMenu(false);
+    const y = id === 'top' ? 0 : docTop(el);
+    setTimeout(() => scrollToY(y), wasOpen ? 380 : 0);
+  });
+
+  /* ---------------- lazy, on-screen-only videos ---------------- */
+  const vio = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) { if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src; if (!RM) v.play().catch(() => { }); }
+    else if (!v.paused) v.pause();
+  }), { rootMargin: '25% 0px' });
+  $$('video[data-auto]').forEach(v => vio.observe(v));
+
+
+  /* ---------------- 04 this is kebbe: 8 reel slots, slow slide, swipeable ---------------- */
+  const REELS = ['piani-dinner', 'angus-team', 'cafein-pour', 'national', 'piani-celebrate', 'angus-plate', 'piani-events', 'studio'];
+  const tik = $('#tik');
+  const card = (c, hidden) => `<figure class="tik__card" data-clip="${c}"${hidden ? ' aria-hidden="true"' : ''}><img src="media/${c}.jpg" alt="" loading="lazy" decoding="async" width="540" height="960"></figure>`;
+  tik.innerHTML = REELS.map(c => card(c, false)).join('') + REELS.map(c => card(c, true)).join('');
+  const tikIO = new IntersectionObserver(es => es.forEach(e => {
+    const el = e.target; let v = $('video', el);
+    if (e.isIntersecting && !RM) {
+      if (!v) { v = document.createElement('video'); Object.assign(v, { muted: true, loop: true, playsInline: true, preload: 'auto' }); v.setAttribute('aria-hidden', 'true'); v.setAttribute('playsinline', ''); v.src = `media/${el.dataset.clip}.mp4`; el.appendChild(v); }
+      v.play().catch(() => { });
+    } else if (v) { v.pause(); v.removeAttribute('src'); v.load(); v.remove(); }
+  }), { rootMargin: '0px -25% 0px -25%', threshold: .3 });
+  $$('.tik__card', tik).forEach(c => tikIO.observe(c));
+  const tk = { pos: 0, hold: 0, vis: false, touching: false };
+  new IntersectionObserver(es => { tk.vis = es[0].isIntersecting; }).observe(tik);
+  const holdOn = () => { tk.touching = true; };
+  const holdOff = () => { tk.touching = false; tk.hold = 1.6; };
+  tik.addEventListener('touchstart', holdOn, { passive: true });
+  tik.addEventListener('touchend', holdOff, { passive: true });
+  tik.addEventListener('touchcancel', holdOff, { passive: true });
+  if (FINE) { tik.addEventListener('pointerenter', holdOn); tik.addEventListener('pointerleave', holdOff); }
+  subs.add((t, dt) => {
+    if (!tk.vis || RM) return;
+    const half = tik.scrollWidth / 2;
+    if (tk.touching) { tk.pos = tik.scrollLeft; return; }
+    if (tk.hold > 0) { tk.hold -= dt; tk.pos = tik.scrollLeft; return; }
+    tk.pos += dt * (innerWidth < 760 ? 26 : 34);
+    if (tk.pos >= half) tk.pos -= half;
+    tik.scrollLeft = tk.pos;
+  });
+  tik.addEventListener('scroll', () => { const half = tik.scrollWidth / 2; if (tk.touching || tk.hold > 0) { if (tik.scrollLeft >= half) { tik.scrollLeft -= half; } else if (tik.scrollLeft <= 0) { tik.scrollLeft += half; } } }, { passive: true });
+
+  /* ---------------- 04 what we do: title -> images on scroll ---------------- */
+  const whatScroll = $('#whatScroll'), whatStage = $('#whatStage');
+  subs.add(() => {
+    const r = whatScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
+    whatStage.style.setProperty('--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+  });
+
+  /* ---------------- 06 how we work: title -> video on scroll ---------------- */
+  const howScroll = $('#howScroll'), howStage = $('#howStage');
+  subs.add(() => {
+    const r = howScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
+    howStage.style.setProperty('--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+  });
+
+  /* ---------------- 06 production ---------------- */
+  const reel = $('#production'), reelStage = $('#reelStage'), teaser = $('#reelTeaser'), pv = $('#playerVideo'), player = $('#player');
+  const reelWide = innerWidth / innerHeight >= .9;
+  teaser.dataset.auto = ''; vio.observe(teaser);
+  subs.add(() => {
+    const r = reel.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
+    const p = RM ? 1 : clamp(-r.top / (r.height - VH));
+    reelStage.style.setProperty('--p', p.toFixed(4));
+    const ready = p > .66; if (ready !== reel._ready) { reel._ready = ready; reel.classList.toggle('ready', ready); }
+  });
+  let lastFocus = null;
+  function openPlayer() {
+    if (!pv.getAttribute('src')) pv.src = 'media/prod.mp4';
+    lastFocus = document.activeElement;
+    player.classList.add('open'); SC.locked = true; document.body.style.overflow = 'hidden';
+    pv.currentTime = 0; pv.muted = false;
+    pv.play().catch(() => { pv.muted = true; pv.play().catch(() => { }); });
+    teaser.pause();
+    setTimeout(() => $('#playerClose').focus({ preventScroll: true }), 100);
+  }
+  function closePlayer() {
+    player.classList.remove('open'); pv.pause(); SC.locked = false; document.body.style.overflow = '';
+    if (!RM) teaser.play().catch(() => { });
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
+  }
+  $('#reelPlay').addEventListener('click', openPlayer);
+  $('#playerClose').addEventListener('click', closePlayer);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && player.classList.contains('open')) closePlayer(); });
+
+  /* chips light up as they scroll in (touch replacement for hover) */
+  const chipIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('in-view', e.isIntersecting)), { rootMargin: '-40% 0px -40% 0px' });
+  if (TOUCH) $$('.chips li').forEach(li => chipIO.observe(li));
+
+  /* ---------------- 11 trusted by ---------------- */
+  const CLIENTS = "Impact BBDO · Touchdown Middle East · Aims Gulf · IKTVA Aramco · Kaya · The K Hotel · The Gulf Hotel · Gallery 21 · VOID · Azul Beach · Layali Fairuz · Babylonia · Zyra · Black Angus Group · Seven Hotel · Paradiso · Irish Corner · Xtra Cafein · Gulf Brands International · Shan Foods · Ziri Spa · Eden Lounge · Juffair Boulevard Hotel & Suites · Alqahwa · Malibu Restaurant & Coffee Shop Management · House of Athletes · Blue Lotus Property Management · Habara Hotel & Restaurant Tourism Management · The Tunnel · Ziva · Hyde · M Lounge · Blue Sapphire Amusement & Theme Parks · Remya Management · Texas Longhorn · Ourania Restaurant · Eat Greek W.L.L · Obica W.L.L · Rick's Country Kitchen · Sarima Management · Khaliji Cafe · Avanit Restaurant & Cafe · Volto Restaurant · La Luna Consultancy · Three Monkey Stickers · The Entertainer · Euro Motors · Remza Investment".split(' · ');
+  const esc = s => s.replace(/&/g, '&amp;');
+  const strip = (names, hidden) => `<div class="strip"${hidden ? ' aria-hidden="true"' : ''}>${names.map(n => `<span>${esc(n)}</span><i aria-hidden="true"></i>`).join('')}</div>`;
+  const ROWS = 4, per = Math.ceil(CLIENTS.length / ROWS);
+  $('#marquee').innerHTML = Array.from({ length: ROWS }, (_, r) => { const names = CLIENTS.slice(r * per, r * per + per); return `<div class="mrow${r % 2 ? ' rev' : ''}" aria-hidden="true">${strip(names)}${strip(names, true)}</div>`; }).join('')
+    + `<ul class="sr">${CLIENTS.map(n => `<li>${esc(n)}</li>`).join('')}</ul>`;
+  const runIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('run', e.isIntersecting)));
+  runIO.observe($('#marquee'));
+
+  /* phones: sticky WhatsApp bar after the hero, hidden over the closing section and overlays */
+  const mbar = $('#mbar'); let closingInView = false;
+  new IntersectionObserver(es => { closingInView = es[0].isIntersecting; }, { rootMargin: '0px 0px -20% 0px' }).observe($('#closing'));
+  subs.add(() => {
+    const on = scrollY > VH * .85 && !closingInView && !root.classList.contains('menu-open') && !player.classList.contains('open');
+    if (on !== mbar._on) { mbar._on = on; mbar.classList.toggle('on', on); }
+  });
+})();
+</script>
+
+</body>
+</html>
