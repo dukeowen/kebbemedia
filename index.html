@@ -452,6 +452,12 @@ img, video, canvas { display: block; max-width: 100%; }
 .film.is-wide .film__video, .film.is-wide .film__poster { aspect-ratio: 16 / 9; width: min(92vw, calc(70svh * 16 / 9), 1200px); }
 .film__shade { display: none; }
 @media (max-width: 899px) { .reel__tags { display: none; } }
+/* touch phones: flat (2D) card motion only, some phone GPUs show black video inside 3D-rotated boxes */
+@media (hover: none), (pointer: coarse) {
+  .split .reel__frame, .split.split--flip .reel__frame { transform: scale(calc(.94 + var(--p, 0) * .06)); }
+}
+.tap-play { position: absolute; z-index: 6; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--gold); background: rgba(8,8,8,.55); border: 1.5px solid var(--gold); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
@@ -961,6 +967,33 @@ void main(){
   addEventListener('resize', () => { VH = innerHeight; }, { passive: true });
   const KSVG = '<svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>';
 
+  /* ---------------- safe video playback for every phone ----------------
+     Some phones block autoplay (iPhone Low Power Mode, data saver, in-app browsers such as Instagram).
+     Videos always keep their poster image; if a phone blocks playback, the first tap anywhere starts
+     every visible video, and a play button appears on any video that is still blocked. */
+  const blocked = new Set();
+  const inView = v => { const r = v.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0; };
+  function prepVideo(v) { v.muted = true; v.defaultMuted = true; v.setAttribute('muted', ''); v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); }
+  function playSafe(v) {
+    if (!v || RM) return;
+    prepVideo(v);
+    let pr; try { pr = v.play(); } catch (e) { pr = null; }
+    if (pr && pr.then) pr.then(() => { blocked.delete(v); const b = v.parentElement && v.parentElement.querySelector(':scope > .tap-play'); if (b) b.remove(); })
+      .catch(err => { if (err && err.name === 'NotAllowedError') { blocked.add(v); tapButton(v); } });
+  }
+  function tapButton(v) {
+    const host = v.parentElement; if (!host || host.querySelector(':scope > .tap-play')) return;
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tap-play'; b.setAttribute('aria-label', 'Play video');
+    b.innerHTML = '<svg width="16" height="18" viewBox="0 0 18 20" aria-hidden="true"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg>';
+    b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); unlockAll(); });
+    host.appendChild(b);
+  }
+  function unlockAll() { document.querySelectorAll('video').forEach(v => { if (v.id === 'playerVideo') return; if ((v.getAttribute('src') || v.dataset.src) && (blocked.has(v) || (v.paused && inView(v)))) { if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src; playSafe(v); } }); }
+  ['touchend', 'click', 'keydown'].forEach(t => addEventListener(t, unlockAll, { passive: true }));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(unlockAll, 300); });
+  document.querySelectorAll('video').forEach(prepVideo);
+
   /* ---------------- ticker ---------------- */
   const subs = new Set();
   let last = performance.now(), T = 0;
@@ -1059,7 +1092,7 @@ void main(){
   film.classList.add(hv === 'hero-wide' ? 'is-wide' : 'is-tall');
   heroPoster.src = `media/${hv}.jpg`; heroVideo.poster = `media/${hv}.jpg`;
   new IntersectionObserver(es => {
-    if (es[0].isIntersecting) { if (!heroVideo.getAttribute('src')) { heroVideo.preload = 'auto'; heroVideo.src = `media/${hv}.mp4`; } if (!RM) heroVideo.play().catch(() => { }); }
+    if (es[0].isIntersecting) { if (!heroVideo.getAttribute('src')) { heroVideo.preload = 'auto'; heroVideo.src = `media/${hv}.mp4`; } playSafe(heroVideo); }
     else heroVideo.pause();
   }, { rootMargin: '60% 0px' }).observe(film);
   subs.add(() => {
@@ -1147,10 +1180,14 @@ void main(){
   /* ---------------- lazy, on-screen-only videos ---------------- */
   const vio = new IntersectionObserver(es => es.forEach(e => {
     const v = e.target;
-    if (e.isIntersecting) { if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src; if (!RM) v.play().catch(() => { }); }
+    if (e.isIntersecting) { if (!v.getAttribute('src') && v.dataset.src) { v.src = v.dataset.src; v.preload = 'auto'; } playSafe(v); }
     else if (!v.paused) v.pause();
   }), { rootMargin: '25% 0px' });
-  $$('video[data-auto]').forEach(v => vio.observe(v));
+  /* free the phone's video decoders: videos far off-screen are unloaded (their poster stays) and reload when you come back */
+  const farIO = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target; if (!e.isIntersecting && v.dataset.src && v.getAttribute('src')) { v.pause(); v.removeAttribute('src'); v.load(); }
+  }), { rootMargin: '150% 0px' });
+  $$('video[data-auto]').forEach(v => { vio.observe(v); farIO.observe(v); });
 
 
   /* ---------------- 04 this is kebbe: 8 reel slots, slow slide, swipeable ---------------- */
@@ -1162,7 +1199,7 @@ void main(){
     const el = e.target; let v = $('video', el);
     if (e.isIntersecting && !RM) {
       if (!v) { v = document.createElement('video'); Object.assign(v, { muted: true, loop: true, playsInline: true, preload: 'auto' }); v.setAttribute('aria-hidden', 'true'); v.setAttribute('playsinline', ''); v.src = `media/${el.dataset.clip}.mp4`; el.appendChild(v); }
-      v.play().catch(() => { });
+      playSafe(v);
     } else if (v) { v.pause(); v.removeAttribute('src'); v.load(); v.remove(); }
   }), { rootMargin: '0px -25% 0px -25%', threshold: .3 });
   $$('.tik__card', tik).forEach(c => tikIO.observe(c));
@@ -1221,7 +1258,7 @@ void main(){
   }
   function closePlayer() {
     player.classList.remove('open'); pv.pause(); SC.locked = false; document.body.style.overflow = '';
-    if (!RM) teaser.play().catch(() => { });
+    playSafe(teaser);
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
   $('#reelPlay').addEventListener('click', openPlayer);
