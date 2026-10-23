@@ -416,6 +416,21 @@ img, video, canvas { display: block; max-width: 100%; }
 }
 
 /* ---------- reduced motion ---------- */
+/* ---------- story-style frames: the whole video stays visible, never cropped to fill the screen ---------- */
+.reel__frame[class*="frame--"] { inset: auto; left: 50%; top: 50%; height: auto; border-radius: 16px; overflow: hidden; background: var(--ink-2);
+  box-shadow: 0 30px 90px rgba(0,0,0,.6); transform: translate(-50%, -50%) scale(calc(.9 + var(--p, 0) * .1)); }
+.reel__frame[class*="frame--"] video, .reel__frame[class*="frame--"] .what__img { transform: none; }
+.frame--tall { aspect-ratio: 9 / 16; width: min(84vw, calc(72svh * 9 / 16)); }
+.frame--wide { aspect-ratio: 16 / 9; width: min(92vw, calc(70svh * 16 / 9), 1200px); }
+.frame--what { aspect-ratio: 4 / 5; width: min(84vw, calc(70svh * 4 / 5)); }
+@media (min-aspect-ratio: 1/1) { .frame--what { aspect-ratio: 8 / 5; width: min(92vw, calc(70svh * 8 / 5), 1200px); } }
+/* showreel: the same framed look */
+.film__video, .film__poster { inset: auto; left: 50%; top: 50%; height: auto; border-radius: 16px; transform: translate(-50%, -50%) scale(calc(.9 + var(--fp, 0) * .1)); box-shadow: 0 30px 90px rgba(0,0,0,.6); }
+.film.is-tall .film__video, .film.is-tall .film__poster, .film:not(.is-wide) .film__poster { aspect-ratio: 9 / 16; width: min(84vw, calc(72svh * 9 / 16)); }
+.film.is-wide .film__video, .film.is-wide .film__poster { aspect-ratio: 16 / 9; width: min(92vw, calc(70svh * 16 / 9), 1200px); }
+.film__shade { display: none; }
+@media (max-width: 899px) { .reel__tags { display: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
   .grain { display: none !important; }
@@ -509,7 +524,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <section class="sec who" id="who" aria-labelledby="whoTitle">
   <div class="how__scroll who__scroll" id="whoScroll">
   <div class="how__stage" id="whoStage">
-    <div class="reel__frame"><video muted loop playsinline preload="none" data-auto data-src="https://dukeowen.github.io/kebbemedia/media/who-tall.mp4" poster="https://dukeowen.github.io/kebbemedia/media/who-tall.jpg" id="whoVideo" aria-hidden="true"></video></div>
+    <div class="reel__frame frame--wide"><video muted loop playsinline preload="none" data-auto data-src="https://dukeowen.github.io/kebbemedia/media/who-wide.mp4" poster="https://dukeowen.github.io/kebbemedia/media/who-wide.jpg" id="whoVideo" aria-hidden="true"></video></div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">03</span><span class="eyebrow">Who We Are</span></div></div>
     <div class="reel__type">
@@ -524,7 +539,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <section class="sec what" id="what" aria-labelledby="whatTitle">
   <div class="how__scroll what__scroll" id="whatScroll">
   <div class="how__stage" id="whatStage">
-    <div class="reel__frame what__frame">
+    <div class="reel__frame frame--what what__frame">
       <img class="what__img what__img--1" src="https://dukeowen.github.io/kebbemedia/media/what-1.webp" alt="" loading="lazy" decoding="async">
       <img class="what__img what__img--2" src="https://dukeowen.github.io/kebbemedia/media/what-2.webp" alt="" loading="lazy" decoding="async">
     </div>
@@ -556,7 +571,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <section class="sec process" id="how" aria-labelledby="procTitle">
   <div class="how__scroll" id="howScroll">
   <div class="how__stage" id="howStage">
-    <div class="reel__frame"><video muted loop playsinline preload="none" data-auto data-src="https://dukeowen.github.io/kebbemedia/media/how.mp4" poster="https://dukeowen.github.io/kebbemedia/media/how.jpg" aria-hidden="true"></video></div>
+    <div class="reel__frame frame--tall"><video muted loop playsinline preload="none" data-auto data-src="https://dukeowen.github.io/kebbemedia/media/how.mp4" poster="https://dukeowen.github.io/kebbemedia/media/how.jpg" aria-hidden="true"></video></div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">06</span><span class="eyebrow">How We Work</span></div></div>
   <h2 class="display process__title reel__type rv" id="procTitle">
@@ -577,7 +592,7 @@ img, video, canvas { display: block; max-width: 100%; }
       <span class="display l1">From the first idea</span>
       <span class="display l2"><span class="serif">to the final frame.</span></span>
     </h2>
-      <div class="reel__frame" id="reelFrame">
+      <div class="reel__frame frame--tall" id="reelFrame">
         <video muted loop playsinline preload="none" poster="https://dukeowen.github.io/kebbemedia/media/prod.jpg" data-src="https://dukeowen.github.io/kebbemedia/media/prod-teaser.mp4" id="reelTeaser" aria-hidden="true"></video>
         <button class="reel__play" id="reelPlay" aria-label="Production">
           <span class="reel__btn" aria-hidden="true"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg></span>
@@ -1009,7 +1024,6 @@ void main(){
   }
   const whoTitle = $('[data-words]'); const whoWords = splitWords(whoTitle);
   const whoScroll = $('#whoScroll'), whoStage = $('#whoStage'), whoVideo = $('#whoVideo');
-  if (innerWidth / innerHeight >= .9) { whoVideo.dataset.src = 'https://dukeowen.github.io/kebbemedia/media/who-wide.mp4'; whoVideo.poster = 'https://dukeowen.github.io/kebbemedia/media/who-wide.jpg'; }
   subs.add(() => {
     const r = whoScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
     const p = RM ? 1 : clamp((VH * .9 - r.top) / (VH * .9 + (r.height - VH) * .28));
@@ -1020,6 +1034,7 @@ void main(){
   /* ---------------- 02 showreel video (tall on phones, wide on landscape screens) ---------------- */
   const heroVideo = $('#heroVideo'), heroPoster = $('#heroPoster'), film = $('#film');
   const hv = innerWidth / innerHeight >= .9 ? 'hero-wide' : 'hero-tall';
+  film.classList.add(hv === 'hero-wide' ? 'is-wide' : 'is-tall');
   heroPoster.src = `https://dukeowen.github.io/kebbemedia/media/${hv}.jpg`; heroVideo.poster = `https://dukeowen.github.io/kebbemedia/media/${hv}.jpg`;
   new IntersectionObserver(es => {
     if (es[0].isIntersecting) { if (!heroVideo.getAttribute('src')) { heroVideo.preload = 'auto'; heroVideo.src = `https://dukeowen.github.io/kebbemedia/media/${hv}.mp4`; } if (!RM) heroVideo.play().catch(() => { }); }
