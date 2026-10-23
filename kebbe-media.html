@@ -416,14 +416,36 @@ img, video, canvas { display: block; max-width: 100%; }
 }
 
 /* ---------- reduced motion ---------- */
-/* ---------- story-style frames: the whole video stays visible, never cropped to fill the screen ---------- */
-.reel__frame[class*="frame--"] { inset: auto; left: 50%; top: 50%; height: auto; border-radius: 16px; overflow: hidden; background: var(--ink-2);
-  box-shadow: 0 30px 90px rgba(0,0,0,.6); transform: translate(-50%, -50%) scale(calc(.9 + var(--p, 0) * .1)); }
-.reel__frame[class*="frame--"] video, .reel__frame[class*="frame--"] .what__img { transform: none; }
-.frame--tall { aspect-ratio: 9 / 16; width: min(84vw, calc(72svh * 9 / 16)); }
-.frame--wide { aspect-ratio: 16 / 9; width: min(92vw, calc(70svh * 16 / 9), 1200px); }
-.frame--what { aspect-ratio: 4 / 5; width: min(84vw, calc(70svh * 4 / 5)); }
-@media (min-aspect-ratio: 1/1) { .frame--what { aspect-ratio: 8 / 5; width: min(92vw, calc(70svh * 8 / 5), 1200px); } }
+/* ---------- split stages: clear words + a smaller 3D-tilted video card, side by side (never text on top of the video) ---------- */
+.split { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 22px;
+  padding: calc(74px + env(safe-area-inset-top, 0px)) var(--pr) calc(104px + env(safe-area-inset-bottom, 0px)) var(--pl); perspective: 1400px; }
+.split .reel__veil { display: none; }
+.split .reel__type { position: relative; inset: auto; order: 1; width: 100%; padding: 0; opacity: 1; transform: none; pointer-events: auto; }
+.split .reel__type .l1, .split .reel__type .l2 { transform: none; text-align: left; }
+.split .reel__frame { position: relative; inset: auto; order: 2; flex: none; border-radius: 14px; overflow: hidden; background: var(--ink-2);
+  box-shadow: 0 30px 80px rgba(0,0,0,.65), 0 0 0 1px rgba(245,240,231,.08);
+  transform: rotateY(calc((1 - var(--p, 0)) * -16deg)) rotateX(calc((1 - var(--p, 0)) * 7deg)) scale(calc(.9 + var(--p, 0) * .1)); transform-origin: 50% 50%; }
+.split.split--flip .reel__frame { transform: rotateY(calc((1 - var(--p, 0)) * 16deg)) rotateX(calc((1 - var(--p, 0)) * 7deg)) scale(calc(.9 + var(--p, 0) * .1)); }
+.split .reel__frame video, .split .reel__frame .what__img { transform: none; }
+.split .reel__play { opacity: 1; pointer-events: auto; }
+.frame--tall { aspect-ratio: 9 / 16; height: 46svh; width: auto; max-width: 100%; }
+.frame--wide { aspect-ratio: 16 / 9; width: 100%; height: auto; }
+.frame--what { aspect-ratio: 4 / 5; height: 46svh; width: auto; max-width: 100%; }
+.how__scroll, .who__scroll, .what__scroll, .reel { height: 200vh; }
+.split .who__statement, .split .process__title, #whatTitle, .split #reelTitle .display { font-size: min(var(--h), 11vw); }
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) {
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 5vw; padding: 96px var(--pad) 72px; }
+  .split .reel__type { grid-column: 1; grid-row: 1; }
+  .split .reel__frame { grid-column: 2; grid-row: 1; justify-self: center; }
+  .split.split--flip .reel__type { grid-column: 2; }
+  .split.split--flip .reel__frame { grid-column: 1; }
+  .split .who__statement, .split .process__title, #whatTitle, .split #reelTitle .display { font-size: min(var(--h), 7vw); white-space: normal; }
+  .frame--tall { height: 74svh; }
+  .frame--what { aspect-ratio: 8 / 5; width: 100%; height: auto; max-height: 74svh; }
+  .frame--wide { width: 100%; }
+  .reel .reel__tags { position: absolute; left: var(--pad); right: auto; width: 42vw; bottom: 40px; }
+  .split.split--flip ~ .reel__tags, .reel .split--flip .reel__tags { left: auto; right: var(--pad); }
+}
 /* showreel: the same framed look */
 .film__video, .film__poster { inset: auto; left: 50%; top: 50%; height: auto; border-radius: 16px; transform: translate(-50%, -50%) scale(calc(.9 + var(--fp, 0) * .1)); box-shadow: 0 30px 90px rgba(0,0,0,.6); }
 .film.is-tall .film__video, .film.is-tall .film__poster, .film:not(.is-wide) .film__poster { aspect-ratio: 9 / 16; width: min(84vw, calc(72svh * 9 / 16)); }
@@ -523,7 +545,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 02 — Who We Are -->
 <section class="sec who" id="who" aria-labelledby="whoTitle">
   <div class="how__scroll who__scroll" id="whoScroll">
-  <div class="how__stage" id="whoStage">
+  <div class="how__stage split" id="whoStage">
     <div class="reel__frame frame--wide"><video muted loop playsinline preload="none" data-auto data-src="https://dukeowen.github.io/kebbemedia/media/who-wide.mp4" poster="https://dukeowen.github.io/kebbemedia/media/who-wide.jpg" id="whoVideo" aria-hidden="true"></video></div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">03</span><span class="eyebrow">Who We Are</span></div></div>
@@ -538,7 +560,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 03 — What We Do -->
 <section class="sec what" id="what" aria-labelledby="whatTitle">
   <div class="how__scroll what__scroll" id="whatScroll">
-  <div class="how__stage" id="whatStage">
+  <div class="how__stage split split--flip" id="whatStage">
     <div class="reel__frame frame--what what__frame">
       <img class="what__img what__img--1" src="https://dukeowen.github.io/kebbemedia/media/what-1.webp" alt="" loading="lazy" decoding="async">
       <img class="what__img what__img--2" src="https://dukeowen.github.io/kebbemedia/media/what-2.webp" alt="" loading="lazy" decoding="async">
@@ -570,7 +592,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 05 — How We Work -->
 <section class="sec process" id="how" aria-labelledby="procTitle">
   <div class="how__scroll" id="howScroll">
-  <div class="how__stage" id="howStage">
+  <div class="how__stage split" id="howStage">
     <div class="reel__frame frame--tall"><video muted loop playsinline preload="none" data-auto data-src="https://dukeowen.github.io/kebbemedia/media/how.mp4" poster="https://dukeowen.github.io/kebbemedia/media/how.jpg" aria-hidden="true"></video></div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">06</span><span class="eyebrow">How We Work</span></div></div>
@@ -586,7 +608,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 06 — Production -->
 <section class="sec reel" id="production" aria-labelledby="reelTitle">
   <div class="wrap"><div class="sec__head"><span class="eyebrow num">07</span><span class="eyebrow">Production</span></div></div>
-  <div class="reel__stage" id="reelStage">
+  <div class="reel__stage split split--flip" id="reelStage">
     <div class="reel__veil" aria-hidden="true"></div>
     <h2 class="reel__type" id="reelTitle">
       <span class="display l1">From the first idea</span>
