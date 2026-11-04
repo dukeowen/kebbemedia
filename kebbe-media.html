@@ -400,7 +400,6 @@ img, video, canvas { display: block; max-width: 100%; }
   .clines { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
   .cline { border-bottom: 0; }
   .cline a { font-size: clamp(16px, 1.4vw, 22px); }
-  .grain { display: block; }
 }
 @media (hover: hover) and (pointer: fine) {
   .cursor { display: block; }
@@ -523,7 +522,6 @@ img, video, canvas { display: block; max-width: 100%; }
   <a class="mbar__mail" href="mailto:info@kebbemedia.com" aria-label="info@kebbemedia.com"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6"/></svg></a>
 </nav>
 <div class="cursor" id="cursor" aria-hidden="true"><div class="cursor__dot"></div></div>
-<div class="grain" id="grain" aria-hidden="true"></div>
 
 <main id="main">
 
@@ -1052,11 +1050,6 @@ void main(){
       m._my = (m._my || 0) + ((near ? dy * k : 0) - (m._my || 0)) * Math.min(1, dt * 8);
       m.style.transform = `translate3d(${m._mx.toFixed(2)}px, ${m._my.toFixed(2)}px, 0)`;
     }));
-    // film grain texture (desktop only)
-    const c = document.createElement('canvas'); c.width = c.height = 180;
-    const x = c.getContext('2d'); const d = x.createImageData(180, 180);
-    for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
-    x.putImageData(d, 0, 0); $('#grain').style.backgroundImage = `url(${c.toDataURL()})`;
   }
 
   /* ---------------- empty media placeholders: K mark only ---------------- */
