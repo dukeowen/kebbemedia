@@ -556,8 +556,8 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 02 — Showreel -->
 <section class="film" id="film" aria-label="Showreel">
   <div class="film__card" id="filmCard">
-    <img class="film__poster" id="heroPoster" src="https://dukeowen.github.io/kebbemedia/media/hero-1.jpg" alt="" aria-hidden="true">
-    <video class="film__video" id="heroVideo" muted playsinline preload="none" poster="https://dukeowen.github.io/kebbemedia/media/hero-1.jpg" aria-hidden="true"></video>
+    <img class="film__poster" id="heroPoster" src="https://dukeowen.github.io/kebbemedia/media/hero-tall.jpg" alt="" aria-hidden="true">
+    <video class="film__video" id="heroVideo" muted playsinline preload="none" poster="https://dukeowen.github.io/kebbemedia/media/hero-tall.jpg" aria-hidden="true"></video>
     <div class="film__bars" id="filmBars" aria-hidden="true"></div>
     <button type="button" class="film__sound" id="filmSound" aria-label="Turn sound on" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="s-on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="s-off" d="M16.5 9.5l5 5m0-5l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
   </div>
@@ -1103,7 +1103,7 @@ void main(){
 
   /* ---------------- 02 showreel: story-style player, 7 hero films in a row (tap right = next, left = back) ---------------- */
   const heroVideo = $('#heroVideo'), heroPoster = $('#heroPoster'), film = $('#film'), filmCard = $('#filmCard'), filmBars = $('#filmBars'), filmSound = $('#filmSound');
-  const HEROES = ['hero-1', 'hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7'];
+  const HEROES = ['hero-tall', 'hero-1', 'hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7'];
   filmBars.innerHTML = HEROES.map(() => '<span><i></i></span>').join('');
   const bars = $$('span', filmBars);
   let hi = 0, filmOn = false, soundOn = false;
