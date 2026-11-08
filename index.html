@@ -174,7 +174,6 @@ img, video, canvas { display: block; max-width: 100%; }
 .what__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(calc(1.1 - var(--p, 0) * .1)); }
 .what__img--2 { opacity: clamp(0, calc((var(--p, 0) - .72) * 6), 1); }
 @media (min-aspect-ratio: 1/1) {
-  .what__img { width: 50%; }
   .what__img--2 { left: 50%; opacity: 1; }
 }
 .who .who__statement { margin-top: 0; }
@@ -645,7 +644,6 @@ img, video, canvas { display: block; max-width: 100%; }
   <div class="how__stage split split--bg" id="whatStage">
     <div class="reel__frame frame--what what__frame">
       <img class="what__img what__img--1" src="media/what-1.webp" alt="" loading="lazy" decoding="async">
-      <img class="what__img what__img--2" src="media/what-2.webp" alt="" loading="lazy" decoding="async">
     </div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">04</span><span class="eyebrow">What We Do</span></div></div>
