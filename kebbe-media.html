@@ -472,9 +472,13 @@ img, video, canvas { display: block; max-width: 100%; }
 .split.split--bg .reel__frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,8,.6) 0%, rgba(8,8,8,.35) 45%, rgba(8,8,8,.8) 100%); }
 .split.split--bg .reel__type { position: relative; z-index: 2; }
 .split.split--bg .who__statement .w { -webkit-text-stroke-width: 1.5px; }
+.split.split--bg .who__statement { font-size: min(var(--h), 9vw); }
+.split.split--bg .who__lead { font-size: 15px; }
 @media (min-width: 900px) and (min-aspect-ratio: 1/1) {
   .split.split--bg { grid-template-columns: minmax(0, 1fr); }
   .split.split--bg .reel__type { grid-column: 1; max-width: 62%; }
+  .split.split--bg .who__statement { font-size: min(var(--h), 5.6vw); }
+  .split.split--bg .who__lead { font-size: 17px; }
 }
 /* ---------- 07 production: cinematic two-column composition (video 45% / type 55%) ---------- */
 .reel.prod { height: auto; padding: 64px 0 96px; background: #0B0B0B; --pt: #F7F4EF; --pg: #F2AD00; --pm: #A8A8A8; }
