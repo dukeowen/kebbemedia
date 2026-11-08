@@ -467,7 +467,7 @@ img, video, canvas { display: block; max-width: 100%; }
 .film__sound[aria-pressed="true"] .s-off { display: none; }
 @media (max-width: 899px) { .reel__tags { display: none; } }
 /* who we are: the video fills the background and the words sit on top of it */
-.split.split--bg .reel__frame { position: absolute; inset: 0; grid-area: auto; width: 100%; height: 100%; aspect-ratio: auto; max-width: none; border-radius: 0; box-shadow: none; transform: none; z-index: 0; }
+.split.split--bg .reel__frame { position: absolute; inset: 0; grid-area: auto; width: 100%; height: 100%; aspect-ratio: auto; max-width: none; max-height: none; border-radius: 0; box-shadow: none; transform: none; z-index: 0; }
 .split.split--bg .reel__frame video { transform: scale(calc(1.08 - var(--p, 0) * .08)); }
 .split.split--bg .reel__frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,8,.6) 0%, rgba(8,8,8,.35) 45%, rgba(8,8,8,.8) 100%); }
 .split.split--bg .reel__type { position: relative; z-index: 2; }
@@ -592,7 +592,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 03 — What We Do -->
 <section class="sec what" id="what" aria-labelledby="whatTitle">
   <div class="how__scroll what__scroll" id="whatScroll">
-  <div class="how__stage split split--flip" id="whatStage">
+  <div class="how__stage split split--bg" id="whatStage">
     <div class="reel__frame frame--what what__frame">
       <img class="what__img what__img--1" src="https://dukeowen.github.io/kebbemedia/media/what-1.webp" alt="" loading="lazy" decoding="async">
       <img class="what__img what__img--2" src="https://dukeowen.github.io/kebbemedia/media/what-2.webp" alt="" loading="lazy" decoding="async">
