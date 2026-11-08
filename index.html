@@ -532,13 +532,34 @@ img, video, canvas { display: block; max-width: 100%; }
   .prod__title { font-size: clamp(38px, 5.6vw, 78px); }
   .prod__desc { font-size: 17px; }
 }
+/* production as a full-screen film: the teaser fills the section, the words sit on top */
+.reel.prod { position: relative; overflow: hidden; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+.prod__text { position: relative; z-index: 1; }
+.reel.prod > .wrap { position: absolute; z-index: 1; left: 0; right: 0; top: 24px; }
+.prod__inner { position: static; }
+.prod__inner { grid-template-columns: minmax(0, 1fr) !important; width: 100%; }
+.prod__text { order: 0; max-width: 720px; }
+.prod__media { position: absolute !important; inset: 0; width: 100% !important; height: 100%; justify-self: stretch; align-self: stretch; z-index: 0; }
+.prod__glow, .prod__play { display: none; }
+.prod__frame { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; box-shadow: none; background: #0B0B0B; }
+.prod__frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,11,11,.85) 0%, rgba(11,11,11,.55) 55%, rgba(11,11,11,.35) 100%), linear-gradient(180deg, rgba(11,11,11,.5) 0%, rgba(11,11,11,0) 30%, rgba(11,11,11,0) 70%, rgba(11,11,11,.7) 100%); }
+.prod__frame video { transition: none; }
+.prod__desc { color: #D6D3CE; }
+.prod__tags li { color: #D6D3CE; border-color: rgba(247,244,239,.22); background: rgba(11,11,11,.35); }
+.prod__cta { margin-top: 28px; display: inline-flex; align-items: center; gap: 12px; padding: 10px 20px 10px 10px; border-radius: 999px; border: 1px solid rgba(247,244,239,.35); background: rgba(11,11,11,.45);
+  color: var(--pt); font: 500 12px/1 var(--f-mono); letter-spacing: .22em; text-transform: uppercase; transition: background .4s, border-color .4s, color .4s; }
+.prod__cta-i { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--pg); color: #0B0B0B; }
+.prod__cta-i svg { margin-left: 3px; }
+.prod__cta:focus-visible { outline: 2px solid var(--pg); outline-offset: 3px; }
+@media (hover: hover) { .prod__cta:hover { background: var(--pg); border-color: var(--pg); color: #0B0B0B; } .prod__cta:hover .prod__cta-i { background: #0B0B0B; color: var(--pg); } }
+@media (max-width: 759px) { .prod__frame::after { background: linear-gradient(180deg, rgba(11,11,11,.7) 0%, rgba(11,11,11,.5) 45%, rgba(11,11,11,.85) 100%); } .reel.prod { padding-bottom: 120px; } }
 /* entrance: staggered, smooth, once */
-.js .prod__media, .js .prod__eyebrow, .js .prod__l, .js .prod__desc, .js .prod__tags { opacity: 0; transform: translateY(28px);
+.js .prod__media, .js .prod__eyebrow, .js .prod__l, .js .prod__desc, .js .prod__cta, .js .prod__tags { opacity: 0; transform: translateY(28px);
   transition: opacity .9s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1); transition-delay: calc(var(--d, 0) * 110ms); }
-.js .prod__media { transform: translateY(44px); }
-.js .prod.in .prod__media, .js .prod.in .prod__eyebrow, .js .prod.in .prod__l, .js .prod.in .prod__desc, .js .prod.in .prod__tags { opacity: 1; transform: none; }
+.js .prod__media { transform: none; }
+.js .prod.in .prod__media, .js .prod.in .prod__eyebrow, .js .prod.in .prod__l, .js .prod.in .prod__desc, .js .prod.in .prod__cta, .js .prod.in .prod__tags { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .js .prod__media, .js .prod__eyebrow, .js .prod__l, .js .prod__desc, .js .prod__tags { opacity: 1; transform: none; transition: none; }
+  .js .prod__media, .js .prod__eyebrow, .js .prod__l, .js .prod__desc, .js .prod__cta, .js .prod__tags { opacity: 1; transform: none; transition: none; }
   .prod__frame video, .prod__btn { transition: none; }
 }
 /* keep moving cards on their own GPU layer so scrolling never repaints them */
@@ -727,7 +748,8 @@ img, video, canvas { display: block; max-width: 100%; }
         <span class="prod__l prod__gold" style="--d:3">to the final frame.</span>
       </h2>
       <p class="prod__desc" style="--d:4">We transform bold ideas into unforgettable visual experiences, from the first concept to the final frame.</p>
-      <ul class="prod__tags" id="reelTags" style="--d:5"><li>Photography</li><li>Videography</li><li>Multi-camera</li><li>Events</li><li>Interviews</li><li>Behind the scenes</li><li>Editing</li><li>Motion</li><li>VFX</li><li>Post-production</li></ul>
+      <button type="button" class="prod__cta" id="reelPlay2" style="--d:5"><span class="prod__cta-i" aria-hidden="true"><svg width="14" height="16" viewBox="0 0 18 20"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg></span>Watch showreel</button>
+      <ul class="prod__tags" id="reelTags" style="--d:6"><li>Photography</li><li>Videography</li><li>Multi-camera</li><li>Events</li><li>Interviews</li><li>Behind the scenes</li><li>Editing</li><li>Motion</li><li>VFX</li><li>Post-production</li></ul>
     </div>
   </div>
 </section>
@@ -1394,6 +1416,7 @@ void main(){
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
   $('#reelPlay').addEventListener('click', openPlayer);
+  $('#reelPlay2').addEventListener('click', openPlayer);
   $('#playerClose').addEventListener('click', closePlayer);
   addEventListener('keydown', e => { if (e.key === 'Escape' && player.classList.contains('open')) closePlayer(); });
 
