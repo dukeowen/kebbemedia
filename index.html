@@ -466,9 +466,19 @@ img, video, canvas { display: block; max-width: 100%; }
 .film__sound[aria-pressed="true"] .s-on { display: inline; }
 .film__sound[aria-pressed="true"] .s-off { display: none; }
 @media (max-width: 899px) { .reel__tags { display: none; } }
+/* who we are: the video fills the background and the words sit on top of it */
+.split.split--bg .reel__frame { position: absolute; inset: 0; grid-area: auto; width: 100%; height: 100%; aspect-ratio: auto; max-width: none; border-radius: 0; box-shadow: none; transform: none; z-index: 0; }
+.split.split--bg .reel__frame video { transform: scale(calc(1.08 - var(--p, 0) * .08)); }
+.split.split--bg .reel__frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,8,.6) 0%, rgba(8,8,8,.35) 45%, rgba(8,8,8,.8) 100%); }
+.split.split--bg .reel__type { position: relative; z-index: 2; }
+.split.split--bg .who__statement .w { -webkit-text-stroke-width: 1.5px; }
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) {
+  .split.split--bg { grid-template-columns: minmax(0, 1fr); }
+  .split.split--bg .reel__type { grid-column: 1; max-width: 62%; }
+}
 /* touch phones: flat (2D) card motion only, some phone GPUs show black video inside 3D-rotated boxes */
 @media (hover: none), (pointer: coarse) {
-  .split .reel__frame, .split.split--flip .reel__frame { transform: scale(calc(.94 + var(--p, 0) * .06)); }
+  .split:not(.split--bg) .reel__frame, .split.split--flip .reel__frame { transform: scale(calc(.94 + var(--p, 0) * .06)); }
 }
 .tap-play { position: absolute; z-index: 6; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
   display: grid; place-items: center; color: var(--gold); background: rgba(8,8,8,.55); border: 1.5px solid var(--gold); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
@@ -567,7 +577,7 @@ img, video, canvas { display: block; max-width: 100%; }
 <!-- 02 — Who We Are -->
 <section class="sec who" id="who" aria-labelledby="whoTitle">
   <div class="how__scroll who__scroll" id="whoScroll">
-  <div class="how__stage split" id="whoStage">
+  <div class="how__stage split split--bg" id="whoStage">
     <div class="reel__frame frame--wide"><video muted loop playsinline preload="none" data-auto data-src="media/who-wide.mp4" poster="media/who-wide.jpg" id="whoVideo" aria-hidden="true"></video></div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">03</span><span class="eyebrow">Who We Are</span></div></div>
@@ -1094,6 +1104,7 @@ void main(){
   }
   const whoTitle = $('[data-words]'); const whoWords = splitWords(whoTitle);
   const whoScroll = $('#whoScroll'), whoStage = $('#whoStage'), whoVideo = $('#whoVideo');
+  if (innerWidth / innerHeight < .9) { whoVideo.dataset.src = 'media/who-tall.mp4'; whoVideo.poster = 'media/who-tall.jpg'; }
   subs.add(() => {
     const r = whoScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
     const p = RM ? 1 : clamp((VH * .9 - r.top) / (VH * .9 + (r.height - VH) * .28));
