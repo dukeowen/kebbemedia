@@ -1294,7 +1294,7 @@ void main(){
 
 
   /* ---------------- 04 this is kebbe: 8 reel slots, slow slide, swipeable ---------------- */
-  const REELS = ['piani-dinner', 'angus-team', 'cafein-pour', 'national', 'piani-celebrate', 'angus-plate', 'piani-events', 'studio'];
+  const REELS = ['piani-dinner', 'angus-team', 'national', 'piani-celebrate', 'angus-plate', 'piani-events', 'studio'];
   const tik = $('#tik');
   const card = (c, hidden) => `<figure class="tik__card" data-clip="${c}"${hidden ? ' aria-hidden="true"' : ''}><img src="https://dukeowen.github.io/kebbemedia/media/${c}.jpg" alt="" loading="lazy" decoding="async" width="540" height="960"></figure>`;
   tik.innerHTML = REELS.map(c => card(c, false)).join('') + REELS.map(c => card(c, true)).join('');
