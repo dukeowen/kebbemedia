@@ -78,7 +78,7 @@ img, video, canvas { display: block; max-width: 100%; }
 .loader { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; overflow: hidden;
   background: var(--gold);
   transition: clip-path 1.2s var(--ease-io); clip-path: inset(0 0 0 0); }
-.js .loader { display: grid; }
+.js .loader { display: none; } /* the particle K page is the cover: no separate loading screen */
 .loader.out { clip-path: inset(0 0 100% 0); }
 .loader.gone { display: none; }
 .loader__mark { display: flex; flex-direction: column; align-items: center; gap: 4vh; }
@@ -1238,7 +1238,7 @@ void main(){
   /* ---------------- loader ---------------- */
   const loader = $('#loader');
   const heroReveals = [];
-  if (RM) { loader.classList.add('gone'); startIntro(); }
+  if (true) { loader.classList.add('gone'); requestAnimationFrame(startIntro); }
   else {
     requestAnimationFrame(() => loader.classList.add('go'));
     let shown = 0, ready = false;
