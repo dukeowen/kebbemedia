@@ -305,11 +305,15 @@ img, video, canvas { display: block; max-width: 100%; }
 .team__title { font-size: var(--h); margin-top: 28px; }
 .team__side { display: grid; gap: 24px; margin-top: 28px; }
 .team__side p { font-size: clamp(19px, 5.2vw, 24px); line-height: 1.38; }
-.team__bts { position: relative; margin: 8px 0 0; width: min(78vw, 340px); aspect-ratio: 9 / 16; border-radius: 12px; overflow: hidden; background: var(--ink-2);
-  box-shadow: 0 30px 70px -20px rgba(0,0,0,.8); will-change: transform; }
+/* the people: behind-the-scenes film fills the section, words on top */
+.team { position: relative; overflow: hidden; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+.team > *:not(.team__bts) { position: relative; z-index: 1; }
+.team__bts { position: absolute; inset: 0; margin: 0; z-index: 0; background: var(--ink-2); }
 .team__bts video { width: 100%; height: 100%; object-fit: cover; display: block; }
-.team__bts figcaption { position: absolute; left: 12px; bottom: 12px; padding: 7px 11px; border-radius: 999px; background: rgba(8,8,8,.7); border: 1px solid rgba(245,240,231,.25);
+.team__bts::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,8,.7) 0%, rgba(8,8,8,.45) 45%, rgba(8,8,8,.82) 100%); }
+.team__bts figcaption { position: absolute; z-index: 1; right: var(--pr); bottom: calc(100px + env(safe-area-inset-bottom, 0px)); padding: 7px 11px; border-radius: 999px; background: rgba(8,8,8,.7); border: 1px solid rgba(245,240,231,.25);
   font: 500 10.5px/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--bone); }
+@media (min-width: 900px) { .team__bts figcaption { bottom: 32px; } }
 
 /* ---------- 11 trusted by ---------- */
 .clients { overflow: hidden; }
@@ -783,16 +787,16 @@ img, video, canvas { display: block; max-width: 100%; }
 
 <!-- 09 — The People -->
 <section class="sec team wrap" id="people" aria-labelledby="teamTitle">
+  <figure class="team__bts" aria-hidden="true">
+    <video muted loop playsinline preload="none" data-auto data-src="media/studio.mp4" poster="media/studio.jpg"></video>
+    <figcaption>Behind the scenes</figcaption>
+  </figure>
   <div class="sec__head"><span class="eyebrow num">10</span><span class="eyebrow">The People</span></div>
   <div class="team__body">
     <h2 class="display team__title rv" id="teamTitle"><span class="ln"><span>One team.</span></span><span class="ln" style="--i:1"><span><span class="serif">Many</span> specialists.</span></span></h2>
     <div class="team__side fade">
       <ul class="chips"><li>Strategy</li><li>Creative</li><li>Design</li><li>Copy</li><li>Photo</li><li>Video</li><li>Editing</li><li>Motion</li><li>Social</li></ul>
       <p>Built around the project. Powered by the right people.</p>
-      <figure class="team__bts">
-        <video muted loop playsinline preload="none" data-auto data-src="media/studio.mp4" poster="media/studio.jpg" aria-label="Behind the scenes at the Kebbe Media studio"></video>
-        <figcaption>Behind the scenes</figcaption>
-      </figure>
     </div>
   </div>
 </section>
