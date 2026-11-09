@@ -1343,7 +1343,7 @@ void main(){
 
 
   /* ---------------- 04 this is kebbe: 8 reel slots, slow slide, swipeable ---------------- */
-  const REELS = ['reel-1', 'piani-dinner', 'reel-2', 'reel-3', 'reel-4', 'angus-plate', 'reel-5', 'reel-6', 'reel-7', 'studio', 'reel-8', 'reel-9', 'reel-10'];
+  const REELS = ['reel-1', 'piani-dinner', 'reel-2', 'reel-4', 'angus-plate', 'reel-5', 'reel-6', 'reel-7', 'studio', 'reel-8', 'reel-9', 'reel-10'];
   const tik = $('#tik');
   const card = (c, hidden) => `<figure class="tik__card" data-clip="${c}"${hidden ? ' aria-hidden="true"' : ''}><img src="https://kebbeadmin.github.io/kebbemedia/media/${c}.jpg" alt="" loading="lazy" decoding="async" width="540" height="960"></figure>`;
   tik.innerHTML = REELS.map(c => card(c, false)).join('') + REELS.map(c => card(c, true)).join('');
