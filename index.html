@@ -747,7 +747,7 @@ img, video, canvas { display: block; max-width: 100%; }
     <div class="prod__media" style="--d:0">
       <div class="prod__glow" aria-hidden="true"></div>
       <div class="prod__frame" id="reelFrame">
-        <video muted loop playsinline preload="none" poster="media/prod.jpg" data-src="media/prod-teaser.mp4" id="reelTeaser" aria-hidden="true"></video>
+        <video muted loop playsinline preload="none" poster="media/prod-bts-tall.jpg" data-src="media/prod-bts-tall.mp4" id="reelTeaser" aria-hidden="true"></video>
         <button type="button" class="prod__play" id="reelPlay" aria-label="Watch the showreel with sound">
           <span class="prod__btn" aria-hidden="true"><svg width="20" height="22" viewBox="0 0 18 20"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg></span>
           <span class="prod__watch" aria-hidden="true">Watch showreel</span>
@@ -768,7 +768,7 @@ img, video, canvas { display: block; max-width: 100%; }
 </section>
 
 <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Production">
-  <video id="playerVideo" playsinline controls preload="none" poster="media/prod.jpg"></video>
+  <video id="playerVideo" playsinline controls preload="none" poster="media/prod-bts-tall.jpg"></video>
   <button class="player__close" id="playerClose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2 2 14" stroke="currentColor" stroke-width="1.6"/></svg></button>
 </div>
 
@@ -1391,11 +1391,12 @@ void main(){
   /* ---------------- 06 production ---------------- */
   const reel = $('#production'), reelStage = $('#reelStage'), teaser = $('#reelTeaser'), pv = $('#playerVideo'), player = $('#player');
   const reelWide = innerWidth / innerHeight >= .9;
+  if (innerWidth / innerHeight >= 1) { teaser.dataset.src = 'media/prod-bts-wide.mp4'; teaser.poster = 'media/prod-bts-wide.jpg'; }
   teaser.dataset.auto = ''; vio.observe(teaser);
   new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { reel.classList.add('in'); o.disconnect(); } }, { threshold: .2 }).observe(reel);
   let lastFocus = null;
   function openPlayer(src) {
-    const want = typeof src === 'string' ? src : 'media/prod.mp4';
+    const want = typeof src === 'string' ? src : 'media/prod-bts.mp4';
     if (pv.getAttribute('src') !== want) pv.src = want;
     lastFocus = document.activeElement;
     player.classList.add('open'); SC.locked = true; document.body.style.overflow = 'hidden';
