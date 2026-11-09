@@ -177,6 +177,9 @@ img, video, canvas { display: block; max-width: 100%; }
 /* what we do: title first, then the two campaign images (crossfade on phones, side by side on wide screens) */
 .what { padding-top: 0; }
 .what__scroll { height: calc(300 * var(--vh)); }
+/* What We Do: no longer pinned (pinning felt like the page was stuck) — a plain band 25% shorter than the screen */
+.what .what__scroll { height: auto; }
+.what #whatStage { position: relative; height: calc(75 * var(--svh)); min-height: 420px; --p: 1; }
 .what .caps { margin-top: 56px; }
 #whatTitle { font-size: var(--h); }
 .what__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(calc(1.1 - var(--p, 0) * .1)); }
@@ -698,7 +701,7 @@ img, video, canvas { display: block; max-width: 100%; }
   <div class="how__scroll what__scroll" id="whatScroll">
   <div class="how__stage split split--bg" id="whatStage">
     <div class="reel__frame frame--what what__frame">
-      <img class="what__img what__img--1" src="media/what-1.webp" alt="" loading="lazy" decoding="async">
+      <img class="what__img what__img--1" src="media/what-1.webp" alt="" decoding="async">
     </div>
     <div class="reel__veil" aria-hidden="true"></div>
     <div class="how__label wrap"><div class="sec__head"><span class="eyebrow num">04</span><span class="eyebrow">What We Do</span></div></div>
@@ -1376,11 +1379,7 @@ void main(){
   tik.addEventListener('scroll', () => { const half = tik.scrollWidth / 2; if (tk.touching || tk.hold > 0) { if (tik.scrollLeft >= half) { tik.scrollLeft -= half; } else if (tik.scrollLeft <= 0) { tik.scrollLeft += half; } } }, { passive: true });
 
   /* ---------------- 04 what we do: title -> images on scroll ---------------- */
-  const whatScroll = $('#whatScroll'), whatStage = $('#whatStage');
-  subs.add(() => {
-    const r = whatScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
-    whatStage.style.setProperty('--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
-  });
+  /* (no per-frame work here any more: the section is a static band) */
 
   /* ---------------- 06 how we work: title -> video on scroll ---------------- */
   const howScroll = $('#howScroll'), howStage = $('#howStage');
