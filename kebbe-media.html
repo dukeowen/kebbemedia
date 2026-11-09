@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>
+/* phones (portrait): show the whole site at 85% — the same as zooming the browser out — by giving the page a slightly wider layout width */
+(function () {
+  var m = document.querySelector('meta[name=viewport]'), S = 0.85, std = 'width=device-width,initial-scale=1,viewport-fit=cover';
+  if (!m || !window.matchMedia || !matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+  function fit() {
+    var short = Math.min(screen.width, screen.height);
+    var portrait = screen.orientation && screen.orientation.type ? screen.orientation.type.indexOf('portrait') === 0 : innerHeight >= innerWidth;
+    m.setAttribute('content', short <= 600 && portrait ? 'width=' + Math.round(short / S) + ',viewport-fit=cover' : std);
+  }
+  fit();
+  addEventListener('orientationchange', function () { setTimeout(fit, 60); });
+  if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener('change', fit);
+})();
+</script>
 <title>Kebbe Media</title>
 <meta name="description" content="Kebbe Media is a creative and production agency in Bahrain and KSA.">
 <meta property="og:title" content="Kebbe Media">
