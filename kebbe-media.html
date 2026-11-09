@@ -467,6 +467,19 @@ img, video, canvas { display: block; max-width: 100%; }
 .film.is-tall .film__video, .film.is-tall .film__poster, .film:not(.is-wide) .film__poster { aspect-ratio: 9 / 16; width: min(84vw, calc(72svh * 9 / 16)); }
 .film.is-wide .film__video, .film.is-wide .film__poster { aspect-ratio: 16 / 9; width: min(92vw, calc(70svh * 16 / 9), 1200px); }
 .film__shade { display: none; }
+/* showreel grid */
+.film.film--grid { height: auto; min-height: 0; overflow: visible; padding: 72px 0 88px; }
+.film__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 28px; }
+.film__tile { position: relative; aspect-ratio: 9 / 16; border: 0; padding: 0; border-radius: 12px; overflow: hidden; background: var(--ink-2); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.film__tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1s cubic-bezier(.16, 1, .3, 1); }
+.film__tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,8,0) 60%, rgba(8,8,8,.75) 100%); pointer-events: none; }
+.film__name { position: absolute; z-index: 1; left: 10px; right: 46px; bottom: 12px; text-align: left; font: 500 10.5px/1.3 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--bone); }
+.film__play { position: absolute; z-index: 1; right: 10px; bottom: 8px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--bone); border: 1px solid rgba(245,240,231,.5); background: rgba(8,8,8,.45); transition: background .3s, color .3s, border-color .3s; }
+.film__play svg { margin-left: 2px; }
+.film__tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+@media (hover: hover) { .film__tile:hover video { transform: scale(1.05); } .film__tile:hover .film__play { background: var(--gold); border-color: var(--gold); color: var(--ink); } }
+@media (min-width: 760px) { .film__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; } }
+@media (min-width: 1100px) { .film__grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } .film.film--grid { padding: 96px 0 112px; } }
 /* showreel: Instagram-story style player cycling through the hero films */
 .film__card { position: absolute; left: 50%; top: 50%; aspect-ratio: 9 / 16; width: min(84vw, calc(72svh * 9 / 16)); border-radius: 16px; overflow: hidden; background: var(--ink-2);
   box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(245,240,231,.08); transform: translate(-50%, -50%) scale(calc(.9 + var(--fp, 0) * .1)); cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -657,14 +670,9 @@ img, video, canvas { display: block; max-width: 100%; }
 </section>
 
 <!-- 02 — Showreel -->
-<section class="film" id="film" aria-label="Showreel">
-  <div class="film__card" id="filmCard">
-    <img class="film__poster" id="heroPoster" src="https://kebbeadmin.github.io/kebbemedia/media/hero-1.jpg" alt="" aria-hidden="true">
-    <video class="film__video" id="heroVideo" muted playsinline preload="none" poster="https://kebbeadmin.github.io/kebbemedia/media/hero-1.jpg" aria-hidden="true"></video>
-    <div class="film__bars" id="filmBars" aria-hidden="true"></div>
-    <button type="button" class="film__sound" id="filmSound" aria-label="Turn sound on" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="s-on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="s-off" d="M16.5 9.5l5 5m0-5l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-  </div>
-  <div class="film__label wrap"><div class="sec__head"><span class="eyebrow num">02</span><span class="eyebrow">Showreel</span></div></div>
+<section class="film film--grid" id="film" aria-label="Showreel">
+  <div class="wrap"><div class="sec__head"><span class="eyebrow num">02</span><span class="eyebrow">Showreel</span></div></div>
+  <div class="film__grid wrap" id="filmGrid"></div>
 </section>
 
 <!-- 02 — Who We Are -->
@@ -1216,43 +1224,22 @@ void main(){
     whoWords.forEach((w, i) => { const on = p * whoWords.length * 1.25 - i > .5; if (on !== w._on) { w._on = on; w.classList.toggle('on', on); } });
   });
 
-  /* ---------------- 02 showreel: story-style player, 7 hero films in a row (tap right = next, left = back) ---------------- */
-  const heroVideo = $('#heroVideo'), heroPoster = $('#heroPoster'), film = $('#film'), filmCard = $('#filmCard'), filmBars = $('#filmBars'), filmSound = $('#filmSound');
+  /* ---------------- 02 showreel: a grid of the hero films (tap one to watch it with sound) ---------------- */
   const HEROES = ['hero-1', 'hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7', 'hero-8', 'hero-9', 'hero-10'];
-  filmBars.innerHTML = HEROES.map(() => '<span><i></i></span>').join('');
-  const bars = $$('span', filmBars);
-  let hi = 0, filmOn = false, soundOn = false;
-  HEROES.forEach(h => { const im = new Image(); im.src = `https://kebbeadmin.github.io/kebbemedia/media/${h}.jpg`; });
-  function showHero(i) {
-    hi = (i + HEROES.length) % HEROES.length;
-    bars.forEach((b, k) => { b.classList.toggle('done', k < hi); $('i', b).style.width = k < hi ? '100%' : '0'; });
-    heroPoster.src = `https://kebbeadmin.github.io/kebbemedia/media/${HEROES[hi]}.jpg`; heroVideo.poster = `https://kebbeadmin.github.io/kebbemedia/media/${HEROES[hi]}.jpg`;
-    heroVideo.src = `https://kebbeadmin.github.io/kebbemedia/media/${HEROES[hi]}.mp4`; heroVideo.preload = 'auto';
-    if (filmOn) { if (soundOn) { heroVideo.muted = false; heroVideo.play().catch(() => { soundOn = false; filmSound.setAttribute('aria-pressed', 'false'); playSafe(heroVideo); }); } else playSafe(heroVideo); }
-  }
-  heroVideo.addEventListener('ended', () => showHero(hi + 1));
-  heroVideo.addEventListener('playing', () => { heroPoster.style.opacity = 0; });
-  heroVideo.addEventListener('loadstart', () => { heroPoster.style.opacity = 1; });
-  filmCard.addEventListener('click', e => {
-    if (e.target.closest('.film__sound, .tap-play')) return;
-    const r = filmCard.getBoundingClientRect();
-    showHero(e.clientX - r.left < r.width / 3 ? hi - 1 : hi + 1);
-  });
-  filmSound.addEventListener('click', e => {
-    e.stopPropagation(); soundOn = !soundOn;
-    filmSound.setAttribute('aria-pressed', String(soundOn)); filmSound.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on');
-    heroVideo.muted = !soundOn; if (soundOn) heroVideo.play().catch(() => { });
-  });
-  new IntersectionObserver(es => {
-    filmOn = es[0].isIntersecting;
-    if (filmOn) { if (!heroVideo.getAttribute('src')) showHero(hi); else if (soundOn) { heroVideo.muted = false; heroVideo.play().catch(() => { }); } else playSafe(heroVideo); }
-    else heroVideo.pause();
-  }, { threshold: .35 }).observe(film);
-  subs.add(() => {
-    const r = film.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
-    film.style.setProperty('--fp', clamp(1 - r.top / VH).toFixed(4));
-    if (heroVideo.duration) $('i', bars[hi]).style.width = (heroVideo.currentTime / heroVideo.duration * 100).toFixed(2) + '%';
-  });
+  const HERO_NAMES = { 'hero-1': 'Ferrari 812', 'hero-2': 'The Entertainer · Bushido', 'hero-3': 'Ferrari Showroom', 'hero-4': 'Vida Hotel', 'hero-5': 'Ferrari', 'hero-6': 'The Entertainer', 'hero-7': 'Jumami', 'hero-8': 'Kaya', 'hero-9': 'Kebbe Media', 'hero-10': 'Kebbe Portfolio' };
+  const filmGrid = $('#filmGrid');
+  filmGrid.innerHTML = HEROES.map(h => `<button type="button" class="film__tile" data-h="${h}" aria-label="Play ${HERO_NAMES[h] || 'film'} with sound">
+      <video muted loop playsinline preload="none" poster="https://kebbeadmin.github.io/kebbemedia/media/${h}.jpg" data-src="https://kebbeadmin.github.io/kebbemedia/media/${h}.mp4" aria-hidden="true"></video>
+      <span class="film__name">${HERO_NAMES[h] || ''}</span><span class="film__play" aria-hidden="true"><svg width="14" height="16" viewBox="0 0 18 20"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg></span></button>`).join('');
+  const tiles = $$('.film__tile', filmGrid);
+  const tileIO = new IntersectionObserver(es => es.forEach(e => {
+    const v = $('video', e.target);
+    if (e.intersectionRatio >= .5) { if (!v.getAttribute('src')) v.src = v.dataset.src; playSafe(v); } else if (!v.paused) v.pause();
+  }), { threshold: [0, .5] });
+  const tileFar = new IntersectionObserver(es => es.forEach(e => {
+    const v = $('video', e.target); if (!e.isIntersecting && v.getAttribute('src')) { v.pause(); v.removeAttribute('src'); v.load(); }
+  }), { rootMargin: '120% 0px' });
+  tiles.forEach(t => { tileIO.observe(t); tileFar.observe(t); t.addEventListener('click', () => openPlayer(`https://kebbeadmin.github.io/kebbemedia/media/${t.dataset.h}.mp4`)); });
 
   /* ---------------- 01 opening: particles condense into the K on load ---------------- */
   const phil = $('#top'), philStage = $('#philStage');
@@ -1402,8 +1389,9 @@ void main(){
   teaser.dataset.auto = ''; vio.observe(teaser);
   new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { reel.classList.add('in'); o.disconnect(); } }, { threshold: .2 }).observe(reel);
   let lastFocus = null;
-  function openPlayer() {
-    if (!pv.getAttribute('src')) pv.src = 'https://kebbeadmin.github.io/kebbemedia/media/prod.mp4';
+  function openPlayer(src) {
+    const want = typeof src === 'string' ? src : 'https://kebbeadmin.github.io/kebbemedia/media/prod.mp4';
+    if (pv.getAttribute('src') !== want) pv.src = want;
     lastFocus = document.activeElement;
     player.classList.add('open'); SC.locked = true; document.body.style.overflow = 'hidden';
     pv.currentTime = 0; pv.muted = false;
