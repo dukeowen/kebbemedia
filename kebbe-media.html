@@ -448,6 +448,11 @@ img, video, canvas { display: block; max-width: 100%; }
 .frame--wide { aspect-ratio: 16 / 9; width: 100%; height: auto; }
 .frame--what { aspect-ratio: 4 / 5; height: calc(46 * var(--svh)); width: auto; max-width: 100%; }
 .how__scroll, .who__scroll, .what__scroll, .reel { height: calc(200 * var(--vh)); }
+/* phones & touch tablets: 03 Who We Are and 06 How We Work stay pinned for 35% of a screen instead of a full screen.
+   Their scroll animations are driven by progress through the section (0 → 1), so they still finish, just over a shorter swipe. Desktop keeps 200vh. */
+@media (hover: none) and (pointer: coarse) and (max-width: 950px) {
+  .who .who__scroll, .process .how__scroll { height: calc(135 * var(--vh)); }
+}
 .split .who__statement, .split .process__title, #whatTitle, .split #reelTitle .display { font-size: min(var(--h), calc(11 * var(--vw))); }
 @media (min-width: 900px) and (min-aspect-ratio: 1/1) {
   .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: calc(5 * var(--vw)); padding: 96px var(--pad) 72px; }
