@@ -298,6 +298,16 @@ img, video, canvas { display: block; max-width: 100%; }
 .js .proj.in .proj__media { clip-path: inset(0 0 0 0); }
 .proj__media .ph-empty { position: absolute; inset: 0; }
 .proj__desc { font-size: 17px; line-height: 1.5; }
+/* phones: 08 Selected Work at half size — two projects side by side (videos half as wide), half-size titles, smaller copy */
+@media (hover: none) and (pointer: coarse) and (max-width: 950px) {
+  #work .sec__title { font-size: calc(var(--h) * .5); }
+  #work .work__list { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 12px; margin-top: 24px; }
+  #work .proj { gap: 8px; align-content: start; }
+  #work .proj__head { gap: 4px; }
+  #work .proj__name { font-size: clamp(20px, calc(6.2 * var(--vw)), 46px); }
+  #work .proj__num, #work .proj__tags { font-size: 9px; }
+  #work .proj__desc { font-size: 11px; line-height: 1.45; }
+}
 .stats { display: flex; flex-wrap: wrap; gap: 18px 32px; margin: 4px 0 0; }
 .stats div { display: grid; }
 .stats dt { font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; text-transform: uppercase; font-size: 56px; line-height: .9; color: var(--gold); }
