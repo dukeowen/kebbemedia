@@ -786,6 +786,13 @@ html.svm-open .mbar { opacity: 0; pointer-events: none; }
   .svc__edge, .svc__edge::before, .svm__amb { animation: none; }
   .svc__card, .svm__panel, .svm .st, .svm__body { transition-duration: .01s !important; }
 }
+
+/* ---------- 09 creative beyond content: flipbook ---------- */
+/* one fixed frame; the photos swap instantly inside it, like a GIF */
+.flip { position: relative; margin: 32px auto 0; width: min(100%, 460px, calc(74 * var(--svh) * .58)); aspect-ratio: 600 / 1034; border-radius: 4px; overflow: hidden; background: var(--ink-2); contain: strict; }
+.flip img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; visibility: hidden; }
+.flip img.on { visibility: visible; }
+@media (min-width: 900px) { .flip { margin-top: 56px; width: min(100%, 520px, calc(78 * var(--svh) * .58)); } }
 </style>
 </head>
 <body>
@@ -1033,15 +1040,27 @@ html.svm-open .mbar { opacity: 0; pointer-events: none; }
 <section class="sec beyond wrap" id="beyond" aria-labelledby="beyondTitle">
   <div class="sec__head"><span class="eyebrow num">09</span></div>
   <h2 class="display sec__title rv" id="beyondTitle"><span class="ln"><span>Creative</span></span> <span class="ln" style="--i:1"><span class="serif">Beyond Content</span></span></h2>
-  <div class="mosaic" id="mosaic" aria-hidden="true">
-    <div class="tile" style="--i:0"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-1.webp" width="973" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:1"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-14.webp" width="563" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:2"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-11.webp" width="667" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:3"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-15.webp" width="563" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:4"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-10.webp" width="667" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:5"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-16.webp" width="563" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:6"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-13.webp" width="562" height="1000" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile" style="--i:7"><img src="https://kebbeadmin.github.io/kebbemedia/media/beyond-12.webp" width="562" height="1000" alt="" loading="lazy" decoding="async"></div>
+  <div class="flip" id="flip" role="img" aria-label="Creative Beyond Content: a quick flip through our campaign work">
+    <img src="https://kebbeadmin.github.io/kebbemedia/media/flip-01.webp" class="on" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-02.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-03.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-04.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-05.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-06.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-07.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-08.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-09.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-10.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-11.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-12.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-13.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-14.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-15.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-16.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-17.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-18.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-19.webp" width="600" height="1034" alt="">
+    <img data-src="https://kebbeadmin.github.io/kebbemedia/media/flip-20.webp" width="600" height="1034" alt="">
   </div>
 </section>
 
@@ -1765,6 +1784,26 @@ void main(){
       c.addEventListener('pointerenter', () => c.classList.add('tilting'));
       c.addEventListener('pointermove', e => { ev = e; if (!raf) raf = requestAnimationFrame(apply); });
       c.addEventListener('pointerleave', () => { c.classList.remove('tilting'); c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+  })();
+
+  /* ---------------- 09: flipbook (instant frame swaps, ~5 per second) ---------------- */
+  (() => {
+    const box = $('#flip'); if (!box) return;
+    const frames = $$('img', box), FRAME = .2; /* seconds per photo */
+    let cur = 0, acc = 0, vis = false, ready = false;
+    /* load and decode every frame before playing, so no frame ever shows blank */
+    const preload = () => Promise.all(frames.map(im => { if (!im.getAttribute('src')) im.src = im.dataset.src;
+      return (im.decode ? im.decode() : new Promise(r => { if (im.complete) r(); else { im.onload = im.onerror = r; } })).catch(() => { }); }));
+    const near = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { near.disconnect(); preload().then(() => { ready = true; }); } }, { rootMargin: '1500px 0px' });
+    near.observe(box);
+    if (RM) return; /* reduced motion: keep the first photo still */
+    new IntersectionObserver(es => es.forEach(e => { vis = e.isIntersecting; })).observe(box); /* only flips while on screen */
+    subs.add((t, dt) => {
+      if (!vis || !ready) return;
+      acc += dt; if (acc < FRAME) return;
+      acc = acc > FRAME * 3 ? 0 : acc - FRAME;
+      frames[cur].classList.remove('on'); cur = (cur + 1) % frames.length; frames[cur].classList.add('on');
     });
   })();
 
