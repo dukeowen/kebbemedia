@@ -448,10 +448,10 @@ img, video, canvas { display: block; max-width: 100%; }
 .frame--wide { aspect-ratio: 16 / 9; width: 100%; height: auto; }
 .frame--what { aspect-ratio: 4 / 5; height: calc(46 * var(--svh)); width: auto; max-width: 100%; }
 .how__scroll, .who__scroll, .what__scroll, .reel { height: calc(200 * var(--vh)); }
-/* phones & touch tablets: 03 Who We Are and 06 How We Work stay pinned for 35% of a screen instead of a full screen.
-   Their scroll animations are driven by progress through the section (0 → 1), so they still finish, just over a shorter swipe. Desktop keeps 200vh. */
+/* phones & touch tablets: 03 Who We Are and 06 How We Work only hold for a tenth of a screen (about two swipes to get past each).
+   Their scroll animations play while the section slides in and finish as it releases (see SHORT_PIN in the script). Desktop keeps 200vh. */
 @media (hover: none) and (pointer: coarse) and (max-width: 950px) {
-  .who .who__scroll, .process .how__scroll { height: calc(135 * var(--vh)); }
+  .who .who__scroll, .process .how__scroll { height: calc(110 * var(--vh)); }
 }
 .split .who__statement, .split .process__title, #whatTitle, .split #reelTitle .display { font-size: min(var(--h), calc(11 * var(--vw))); }
 @media (min-width: 900px) and (min-aspect-ratio: 1/1) {
@@ -1320,6 +1320,8 @@ void main(){
   addEventListener('resize', () => { requestAnimationFrame(() => { lastW = innerWidth; }); }, { passive: true });
   onWidth(readZ);
   /* write a CSS variable only when its value changes (writing it every frame forced a style pass every frame) */
+  /* phones: 03 and 06 are short, so their progress runs from 'section starts sliding in' to 'section releases' instead of over the pinned part only */
+  const SHORT_PIN = matchMedia('(hover: none) and (pointer: coarse) and (max-width: 950px)');
   const setVar = (el, k, v) => { if (el['_v' + k] !== v) { el['_v' + k] = v; el.style.setProperty(k, v); } };
   const KSVG = '<svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>';
 
@@ -1441,7 +1443,7 @@ void main(){
   subs.add(() => {
     const r = whoScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
     const p = RM ? 1 : clamp((VH * .9 - r.top) / (VH * .9 + (r.height - VH) * .28));
-    setVar(whoStage, '--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+    setVar(whoStage, '--p', (RM ? 1 : SHORT_PIN.matches ? clamp((VH - r.top) / r.height) : clamp(-r.top / (r.height - VH))).toFixed(4));
     whoWords.forEach((w, i) => { const on = p * whoWords.length * 1.25 - i > .5; if (on !== w._on) { w._on = on; w.classList.toggle('on', on); } });
   });
 
@@ -1604,7 +1606,7 @@ void main(){
   const howScroll = $('#howScroll'), howStage = $('#howStage');
   subs.add(() => {
     const r = howScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
-    setVar(howStage, '--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+    setVar(howStage, '--p', (RM ? 1 : SHORT_PIN.matches ? clamp((VH - r.top) / r.height) : clamp(-r.top / (r.height - VH))).toFixed(4));
   });
 
   /* ---------------- 06 production ---------------- */
