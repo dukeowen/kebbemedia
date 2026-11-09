@@ -787,12 +787,56 @@ html.svm-open .mbar { opacity: 0; pointer-events: none; }
   .svc__card, .svm__panel, .svm .st, .svm__body { transition-duration: .01s !important; }
 }
 
-/* ---------- 09 creative beyond content: flipbook ---------- */
-/* one fixed frame; the photos swap instantly inside it, like a GIF */
-.flip { position: relative; margin: 32px auto 0; width: min(100%, 460px, calc(74 * var(--svh) * .58)); aspect-ratio: 600 / 1034; border-radius: 4px; overflow: hidden; background: var(--ink-2); contain: strict; }
-.flip img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; visibility: hidden; }
-.flip img.on { visibility: visible; }
-@media (min-width: 900px) { .flip { margin-top: 56px; width: min(100%, 520px, calc(78 * var(--svh) * .58)); } }
+/* ---------- 09 creative beyond content: "The Living Painting" ---------- */
+/* a lit plaster gallery wall (full bleed), a carved gilt frame, and a painting whose picture swaps like a flipbook */
+#beyond { position: relative; isolation: isolate; }
+#beyond::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: calc(100 * var(--vw) + 6px); transform: translateX(-50%); pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--ink) 0%, rgba(14,14,14,0) 16%, rgba(14,14,14,0) 82%, var(--ink) 100%),
+    radial-gradient(ellipse 120% 90% at 50% 55%, rgba(8,6,4,0) 45%, rgba(8,6,4,.62) 100%),
+    radial-gradient(ellipse 60% 40% at 18% 70%, rgba(255,214,160,.035), rgba(255,214,160,0) 70%),
+    radial-gradient(ellipse 55% 45% at 84% 30%, rgba(0,0,0,.18), rgba(0,0,0,0) 70%),
+    linear-gradient(rgba(16,12,9,.34), rgba(16,12,9,.34)),
+    url("media/plaster.webp") 0 0 / 640px 640px repeat, #2b241d; }
+.gallery { position: relative; margin-top: 48px; padding: 9% 0 4px; }
+.art { position: relative; margin: 0 auto; width: min(84%, 560px, calc(70 * var(--svh) * .6425)); aspect-ratio: 1100 / 1712;
+  box-shadow: 0 2px 3px rgba(0,0,0,.65), 0 26px 40px -14px rgba(0,0,0,.8), 0 70px 110px -30px rgba(0,0,0,.65); }
+/* warm pool of light the picture lamp throws on the wall */
+.art__glow { position: absolute; left: -55%; right: -55%; top: -30%; height: 105%; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 52% 48% at 50% 28%, rgba(255,208,145,.50), rgba(255,190,120,.17) 46%, rgba(255,190,120,0) 74%); }
+.gallery.live .art__glow { animation: glowBreath 7s ease-in-out infinite alternate; }
+@keyframes glowBreath { from { opacity: .86; } to { opacity: 1; } }
+/* brass picture light */
+.art__lamp { position: absolute; left: 50%; top: -10.5%; width: 46%; height: 10.5%; transform: translateX(-50%); z-index: 3; pointer-events: none; }
+.art__lamp::before { content: ""; position: absolute; left: 50%; top: 28%; bottom: 0; width: 2.4%; transform: translateX(-50%); border-radius: 2px;
+  background: linear-gradient(90deg, #5c4318, #e2c27a 45%, #8a6528 70%, #4a3512); box-shadow: 6px 10px 10px rgba(0,0,0,.45); }
+.art__lamp i { position: absolute; left: 0; right: 0; top: 0; height: 34%; border-radius: 50% 50% 5px 5px / 90% 90% 5px 5px;
+  background: linear-gradient(180deg, #f0d697 0%, #c79a48 30%, #8c6427 62%, #3d2a0d 100%); box-shadow: 0 14px 18px -6px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,245,215,.7); }
+.art__lamp i::after { content: ""; position: absolute; left: 6%; right: 6%; bottom: -5px; height: 7px; border-radius: 50%; filter: blur(3px);
+  background: radial-gradient(closest-side, rgba(255,236,190,.95), rgba(255,210,140,0)); }
+/* the painting itself, set just under the frame's sight edge */
+.art__canvas { position: absolute; left: 11.1%; right: 11.1%; top: 7.15%; bottom: 7.15%; overflow: hidden; background: #1a1612; z-index: 1; }
+.art__canvas img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; visibility: hidden; }
+.art__canvas img.on { visibility: visible; }
+/* lamp light falling down the canvas + the frame's shadow on the paint */
+.art__light { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,226,175,.16) 0%, rgba(255,226,175,0) 34%, rgba(0,0,0,0) 62%, rgba(0,0,0,.22) 100%);
+  box-shadow: inset 0 16px 18px -10px rgba(0,0,0,.75), inset 0 -6px 10px -6px rgba(0,0,0,.6), inset 10px 0 12px -10px rgba(0,0,0,.6), inset -10px 0 12px -10px rgba(0,0,0,.6); }
+/* fine linen weave, so the photos read as paint on canvas */
+.art__canvas::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url("media/canvas.webp") 0 0 / 96px 96px repeat; mix-blend-mode: overlay; opacity: .16; }
+.art__frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+/* museum plaque */
+.plaque { display: table; margin: 7% auto 0; padding: 9px 18px 8px; border-radius: 2px; position: relative; text-align: center;
+  background: linear-gradient(180deg, #e3c27c 0%, #c19643 42%, #9b7230 100%); color: #2a1c07;
+  box-shadow: 0 8px 16px -4px rgba(0,0,0,.6), 0 1px 2px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,244,214,.75), inset 0 -1px 0 rgba(60,40,10,.45);
+  text-shadow: 0 1px 0 rgba(255,238,196,.55); line-height: 1.25; }
+.plaque b { font-family: var(--f-display); font-weight: 860; font-variation-settings: "wdth" 62; font-stretch: 62%; font-size: 15px; letter-spacing: .14em; }
+.plaque span { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .06em; white-space: nowrap; margin-left: .45em; }
+.plaque::before, .plaque::after { content: ""; position: absolute; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff0c8, #8a6426 70%); box-shadow: 0 1px 1px rgba(0,0,0,.5); }
+.plaque::before { left: 6px; } .plaque::after { right: 6px; }
+@media (min-width: 900px) { .gallery { margin-top: 64px; padding-top: 7%; } .art { width: min(100%, 560px, calc(72 * var(--svh) * .6425)); } .plaque { margin-top: 56px; padding: 11px 26px 10px; } .plaque b { font-size: 18px; } .plaque span { font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { .gallery.live .art__glow { animation: none; } }
 </style>
 </head>
 <body>
@@ -1040,27 +1084,36 @@ html.svm-open .mbar { opacity: 0; pointer-events: none; }
 <section class="sec beyond wrap" id="beyond" aria-labelledby="beyondTitle">
   <div class="sec__head"><span class="eyebrow num">09</span></div>
   <h2 class="display sec__title rv" id="beyondTitle"><span class="ln"><span>Creative</span></span> <span class="ln" style="--i:1"><span class="serif">Beyond Content</span></span></h2>
-  <div class="flip" id="flip" role="img" aria-label="Creative Beyond Content: a quick flip through our campaign work">
-    <img src="media/flip-01.webp" class="on" width="600" height="1034" alt="">
-    <img data-src="media/flip-02.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-03.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-04.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-05.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-06.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-07.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-08.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-09.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-10.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-11.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-12.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-13.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-14.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-15.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-16.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-17.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-18.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-19.webp" width="600" height="1034" alt="">
-    <img data-src="media/flip-20.webp" width="600" height="1034" alt="">
+  <div class="gallery" id="gallery">
+    <div class="art">
+      <span class="art__glow" aria-hidden="true"></span>
+      <span class="art__lamp" aria-hidden="true"><i></i></span>
+      <div class="art__canvas" id="flip" role="img" aria-label="A Living Collection: a gilded frame on a gallery wall, its painting flicking through Kebbe Media's campaign work">
+        <img src="media/flip-01.webp" class="on" width="600" height="1034" alt="">
+        <img data-src="media/flip-02.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-03.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-04.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-05.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-06.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-07.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-08.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-09.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-10.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-11.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-12.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-13.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-14.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-15.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-16.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-17.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-18.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-19.webp" width="600" height="1034" alt="">
+        <img data-src="media/flip-20.webp" width="600" height="1034" alt="">
+        <span class="art__light" aria-hidden="true"></span>
+      </div>
+      <img class="art__frame" src="media/frame-gold.webp" width="1100" height="1712" alt="" decoding="async">
+    </div>
+    <p class="plaque"><b>KEBBE MEDIA</b> <span>— A Living Collection</span></p>
   </div>
 </section>
 
@@ -1798,7 +1851,8 @@ void main(){
     const near = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { near.disconnect(); preload().then(() => { ready = true; }); } }, { rootMargin: '1500px 0px' });
     near.observe(box);
     if (RM) return; /* reduced motion: keep the first photo still */
-    new IntersectionObserver(es => es.forEach(e => { vis = e.isIntersecting; })).observe(box); /* only flips while on screen */
+    const gal = box.closest('.gallery');
+    new IntersectionObserver(es => es.forEach(e => { vis = e.isIntersecting; if (gal) gal.classList.toggle('live', vis); })).observe(box); /* only flips (and the lamp glow only breathes) while on screen */
     subs.add((t, dt) => {
       if (!vis || !ready) return;
       acc += dt; if (acc < FRAME) return;
