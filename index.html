@@ -296,7 +296,7 @@ img, video, canvas { display: block; max-width: 100%; }
 .mosaic > div { border-radius: 4px; }
 .mosaic .t1 { grid-column: span 2; grid-row: span 2; }
 .mosaic .t2 { grid-row: span 2; }
-.mosaic .t5 { grid-column: span 1; }
+.mosaic .t5 { grid-column: span 2; }
 .mosaic .t7 { grid-column: span 2; }
 .mosaic .t8, .mosaic .t9 { grid-row: span 2; }
 .tile { position: relative; overflow: hidden; background: var(--ink-2); }
@@ -367,7 +367,7 @@ img, video, canvas { display: block; max-width: 100%; }
   .mosaic { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 22vw; }
   .mosaic .t5 { grid-column: span 2; }
   .mosaic .t7 { grid-column: span 1; }
-  .mosaic .t9 { grid-column: span 2; }
+  .mosaic .t9 { grid-column: span 2; grid-row: span 1; }
   .contact__row { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
   .clines { grid-template-columns: 1fr 1fr; column-gap: 32px; }
   .pillars ul { grid-template-columns: repeat(4, 1fr); }
@@ -409,6 +409,8 @@ img, video, canvas { display: block; max-width: 100%; }
   .reel__play:hover .reel__btn { transform: scale(1.1); border-color: var(--gold); color: var(--gold); }
   .mosaic { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 15vw; gap: 12px; }
   .mosaic .t8 { grid-column: span 2; }
+  .mosaic .t7 { grid-column: span 2; }
+  .mosaic .t9 { grid-row: span 2; }
   .team__body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; }
   .team__side { margin-top: 0; }
   .team__title { font-size: min(var(--h), 8.4vw); }
@@ -815,7 +817,6 @@ img, video, canvas { display: block; max-width: 100%; }
     <div class="tile t3" style="--i:2"><img src="media/beyond-3.webp" alt="" loading="lazy" decoding="async"></div>
     <div class="tile t4" style="--i:3"><img src="media/beyond-11.webp" alt="" loading="lazy" decoding="async"></div>
     <div class="tile t5" style="--i:4"><img src="media/beyond-8.webp" alt="" loading="lazy" decoding="async"></div>
-    <div class="tile t6" style="--i:5"><img src="media/beyond-9.webp" alt="" loading="lazy" decoding="async"></div>
     <div class="tile t7" style="--i:6"><img src="media/beyond-10.webp" alt="" loading="lazy" decoding="async"></div>
     <div class="tile t8" style="--i:7"><img src="media/beyond-13.webp" alt="" loading="lazy" decoding="async"></div>
     <div class="tile t9" style="--i:8"><img src="media/beyond-12.webp" alt="" loading="lazy" decoding="async"></div>
