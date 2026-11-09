@@ -1230,8 +1230,8 @@ void main(){
   });
 
   /* ---------------- 02 showreel: a grid of the hero films (tap one to watch it with sound) ---------------- */
-  const HEROES = ['hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7', 'hero-8', 'hero-9', 'hero-10'];
-  const HERO_NAMES = { 'hero-1': 'Ferrari 812', 'hero-2': 'The Entertainer · Bushido', 'hero-3': 'Ferrari Showroom', 'hero-4': 'Vida Hotel', 'hero-5': 'Ferrari', 'hero-6': 'The Entertainer', 'hero-7': 'Jumami', 'hero-8': 'Kaya', 'hero-9': 'Kebbe Media', 'hero-10': 'Kebbe Portfolio' };
+  const HEROES = ['hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7', 'hero-8', 'hero-9', 'hero-10', 'hero-11'];
+  const HERO_NAMES = { 'hero-1': 'Ferrari 812', 'hero-2': 'The Entertainer · Bushido', 'hero-3': 'Ferrari Showroom', 'hero-4': 'Vida Hotel', 'hero-5': 'Ferrari', 'hero-6': 'The Entertainer', 'hero-7': 'Jumami', 'hero-8': 'Kaya', 'hero-9': 'Kebbe Media', 'hero-10': 'Kebbe Portfolio', 'hero-11': 'Xtra Cafein · BTS' };
   const filmGrid = $('#filmGrid');
   filmGrid.innerHTML = HEROES.map(h => `<button type="button" class="film__tile" data-h="${h}" aria-label="Play ${HERO_NAMES[h] || 'film'} with sound">
       <video muted loop playsinline preload="none" poster="media/${h}.jpg" data-src="media/${h}.mp4" aria-hidden="true"></video>
