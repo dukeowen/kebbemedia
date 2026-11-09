@@ -42,7 +42,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { background: var(--ink); -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+html { background: var(--ink); -webkit-text-size-adjust: 100%; } /* no overflow on <html>: with overflow on both html and body, older iOS/Android make <body> its own scroller, which breaks sticky sections and momentum */
 body { margin: 0; background: var(--ink); color: var(--bone); font-family: var(--f-body); font-size: 16px; line-height: 1.55;
   font-variation-settings: "wdth" 100; overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 @supports (overflow: clip) { html, body { overflow-x: clip; } }
@@ -610,10 +610,14 @@ img, video, canvas { display: block; max-width: 100%; }
 .js .svc__card.fade.in { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
 .svc__card.tilting { transition: transform .12s linear, border-color .5s, box-shadow .6s var(--ease-out) !important; transition-delay: 0s !important; }
 .svc__edge { position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none; opacity: .55;
-  background: conic-gradient(from var(--ang), rgba(233,165,11,0) 0deg, rgba(233,165,11,.9) 50deg, rgba(252,243,215,.8) 70deg, rgba(233,165,11,0) 120deg, rgba(233,165,11,0) 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  animation: svcSpin 7s linear infinite paused; transition: opacity .5s; }
-.svc__card.in .svc__edge { animation-play-state: running; }
+  transition: opacity .5s; overflow: hidden; }
+/* the moving gold edge: the same conic gradient, now turned with a GPU transform instead of re-painting an animated custom property every frame */
+.svc__edge::before { content: ""; position: absolute; left: 50%; top: 50%; width: var(--dg, 160%); height: var(--dg, 160%); transform: translate(-50%, -50%) rotate(0deg);
+  background: conic-gradient(from 0deg, rgba(233,165,11,0) 0deg, rgba(233,165,11,.9) 50deg, rgba(252,243,215,.8) 70deg, rgba(233,165,11,0) 120deg, rgba(233,165,11,0) 360deg);
+  animation: svcRot 7s linear infinite paused; }
+@keyframes svcRot { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.svc__card.in.on-screen .svc__edge::before { animation-play-state: running; } /* spin only while the cards are on screen */
 @keyframes svcSpin { to { --ang: 360deg; } }
 .svc__spot { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .5s;
   background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 30%), rgba(233,165,11,.16), rgba(233,165,11,0) 70%); }
@@ -634,7 +638,8 @@ img, video, canvas { display: block; max-width: 100%; }
 @media (hover: hover) and (pointer: fine) {
   .svc__more { opacity: 0; transform: translate3d(0, 8px, 22px); transition: opacity .45s, transform .6s var(--ease-out); }
   .svc__card:hover { border-color: rgba(233,165,11,.45); box-shadow: 0 30px 70px -30px rgba(0,0,0,.9), 0 0 50px -12px rgba(233,165,11,.28); }
-  .svc__card:hover .svc__edge { opacity: 1; animation-duration: 3.2s; }
+  .svc__card:hover .svc__edge { opacity: 1; }
+  .svc__card:hover .svc__edge::before { animation-duration: 3.2s; }
   .svc__card:hover .svc__spot { opacity: 1; }
   .svc__card:hover .svc__ico { transform: scale(1.08) rotate(-8deg); background: var(--gold); color: var(--ink); }
   .svc__card:hover .svc__more { opacity: 1; transform: translate3d(0, 0, 22px); }
@@ -650,7 +655,8 @@ img, video, canvas { display: block; max-width: 100%; }
   border: 1px solid rgba(245,240,231,.14); box-shadow: 0 0 0 1px rgba(233,165,11,.10), 0 50px 140px rgba(0,0,0,.7), 0 0 90px -20px rgba(233,165,11,.22), inset 0 1px 0 rgba(245,240,231,.12);
   opacity: 0; transform: translateY(24px) scale(.94); transition: opacity .45s var(--ease-out), transform .7s var(--ease-out); scrollbar-width: thin; scrollbar-color: rgba(233,165,11,.4) transparent; }
 .svm.open .svm__panel { opacity: 1; transform: none; }
-.svm__amb { position: absolute; top: -140px; right: -120px; width: 420px; height: 420px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(233,165,11,.22), rgba(233,165,11,0)); animation: svmAmb 9s ease-in-out infinite alternate; }
+.svm__amb { position: absolute; top: -140px; right: -120px; width: 420px; height: 420px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(233,165,11,.22), rgba(233,165,11,0)); animation: svmAmb 9s ease-in-out infinite alternate paused; }
+.svm.open .svm__amb { animation-play-state: running; } /* only animate while the pop-up is open (a hidden infinite animation re-rendered every frame site-wide) */
 @keyframes svmAmb { to { transform: translate(-60px, 40px) scale(1.15); } }
 .svm__x { position: sticky; top: 12px; float: right; margin: 12px 12px 0 0; z-index: 3; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(245,240,231,.3); background: rgba(8,8,8,.45);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: transform .6s var(--ease-out), border-color .4s, background .4s; }
@@ -747,7 +753,7 @@ img, video, canvas { display: block; max-width: 100%; }
 }
 html.svm-open .mbar { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
-  .svc__edge, .svm__amb { animation: none; }
+  .svc__edge, .svc__edge::before, .svm__amb { animation: none; }
   .svc__card, .svm__panel, .svm .st, .svm__body { transition-duration: .01s !important; }
 }
 </style>
@@ -1182,6 +1188,7 @@ void main(){
     return {
       gl,
       retarget() { },
+      dispose() { try { const x = gl.getExtension('WEBGL_lose_context'); [bA, bR, bB].forEach(b => gl.deleteBuffer(b)); canvas.width = canvas.height = 1; if (x) x.loseContext(); } catch (e) { } },
       pointer(nx, ny) { st.tx = nx; st.ty = ny; },
       render(time, dt, prog) {
         const { w, h } = fit(canvas, gl, 1);
@@ -1298,9 +1305,17 @@ void main(){
   const TOUCH = !FINE;
   const root = document.documentElement;
   /* page zoom (0.8 on laptops) — JS pixel maths must divide by it */
-  let Z = 1; const readZ = () => { Z = parseFloat(getComputedStyle(root).zoom) || 1; }; readZ(); addEventListener('resize', readZ, { passive: true });
+  let Z = 1; const readZ = () => { Z = parseFloat(getComputedStyle(root).zoom) || 1; }; readZ();
   let VH = innerHeight;
   addEventListener('resize', () => { VH = innerHeight; }, { passive: true });
+  /* phones fire 'resize' while the address bar slides in/out during scrolling; width-dependent work only reruns when the width really changes */
+  const TOUCH_UI = !matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let lastW = innerWidth;
+  const onWidth = fn => addEventListener('resize', () => { if (!TOUCH_UI || innerWidth !== lastW) fn(); }, { passive: true });
+  addEventListener('resize', () => { requestAnimationFrame(() => { lastW = innerWidth; }); }, { passive: true });
+  onWidth(readZ);
+  /* write a CSS variable only when its value changes (writing it every frame forced a style pass every frame) */
+  const setVar = (el, k, v) => { if (el['_v' + k] !== v) { el['_v' + k] = v; el.style.setProperty(k, v); } };
   const KSVG = '<svg class="kmark" viewBox="0 0 584 718" aria-hidden="true"><path class="k-bar" d="M0 0H140Q158 0 158 18V580H0Z"/><path class="k-leg" d="M158 15V405L338 690Q358 718 392 718H583Z"/><path class="k-band" d="M0 535L410 22Q430 0 456 0H566L123 570Q113 580 100 580H0Z"/></svg>';
 
   /* ---------------- safe video playback for every phone ----------------
@@ -1325,7 +1340,8 @@ void main(){
     b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); unlockAll(); });
     host.appendChild(b);
   }
-  function unlockAll() { document.querySelectorAll('video').forEach(v => { if (v.id === 'playerVideo' || (v.id === 'heroVideo' && !v.muted)) return; if ((v.getAttribute('src') || v.dataset.src) && (blocked.has(v) || (v.paused && inView(v)))) { if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src; playSafe(v); } }); }
+  /* runs on every touchend: only does work while some video is actually blocked (it used to measure every video on the page at the start of each flick) */
+  function unlockAll() { if (!blocked.size) return; Array.from(blocked).forEach(v => { if (!v.isConnected) { blocked.delete(v); return; } if (v.id === 'playerVideo' || (v.id === 'heroVideo' && !v.muted)) return; if (v.getAttribute('src') || v.dataset.src) { if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src; playSafe(v); } }); }
   ['touchend', 'click', 'keydown'].forEach(t => addEventListener(t, unlockAll, { passive: true }));
   document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(unlockAll, 300); });
   document.querySelectorAll('video').forEach(prepVideo);
@@ -1365,10 +1381,16 @@ void main(){
   const setP = (x, y) => { P.x = x; P.y = y; P.nx = (x / innerWidth) * 2 - 1; P.ny = -((y / innerHeight) * 2 - 1); };
   addEventListener('pointermove', e => setP(e.clientX, e.clientY), { passive: true });
   // phones: the brand-statement particles follow the device's tilt when available, otherwise a slow drift
+  let stopPointer = () => { };
   if (TOUCH) {
-    addEventListener('touchmove', e => { const t = e.touches[0]; if (t) setP(t.clientX, t.clientY); }, { passive: true });
-    addEventListener('deviceorientation', e => { if (e.gamma == null) return; P.nx = clamp(e.gamma / 35, -1, 1); P.ny = clamp((45 - e.beta) / 35, -1, 1); P.tilt = true; }, { passive: true });
-    subs.add(t => { if (!P.tilt) { P.nx = Math.sin(t * .35) * .45; P.ny = Math.cos(t * .27) * .25; } });
+    const onTouch = e => { const t = e.touches[0]; if (t) setP(t.clientX, t.clientY); };
+    const onTilt = e => { if (e.gamma == null) return; P.nx = clamp(e.gamma / 35, -1, 1); P.ny = clamp((45 - e.beta) / 35, -1, 1); P.tilt = true; };
+    const drift = t => { if (!P.tilt) { P.nx = Math.sin(t * .35) * .45; P.ny = Math.cos(t * .27) * .25; } };
+    addEventListener('touchmove', onTouch, { passive: true });
+    addEventListener('deviceorientation', onTilt, { passive: true });
+    subs.add(drift);
+    /* these only steer the opening particles; once the K is gone they are switched off */
+    stopPointer = () => { removeEventListener('touchmove', onTouch, { passive: true }); removeEventListener('deviceorientation', onTilt, { passive: true }); subs.delete(drift); };
   }
   if (FINE) {
     const cursor = $('#cursor'); const cur = { x: P.x, y: P.y };
@@ -1414,7 +1436,7 @@ void main(){
   subs.add(() => {
     const r = whoScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
     const p = RM ? 1 : clamp((VH * .9 - r.top) / (VH * .9 + (r.height - VH) * .28));
-    whoStage.style.setProperty('--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+    setVar(whoStage, '--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
     whoWords.forEach((w, i) => { const on = p * whoWords.length * 1.25 - i > .5; if (on !== w._on) { w._on = on; w.classList.toggle('on', on); } });
   });
 
@@ -1422,8 +1444,10 @@ void main(){
   const HEROES = ['hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7', 'hero-8', 'hero-9', 'hero-10', 'hero-11'];
   const HERO_NAMES = { 'hero-1': 'Ferrari 812', 'hero-2': 'The Entertainer · Bushido', 'hero-3': 'Ferrari Showroom', 'hero-4': 'Vida Hotel', 'hero-5': 'Ferrari', 'hero-6': 'The Entertainer', 'hero-7': 'Jumami', 'hero-8': 'Kaya', 'hero-9': 'Kebbe Media', 'hero-10': 'Kebbe Portfolio', 'hero-11': 'Xtra Cafein · BTS' };
   const filmGrid = $('#filmGrid');
+  /* phones: the silent grid previews use 540p copies of the same films (tiles are ~170px wide, so this looks identical but decodes ~45% fewer pixels; up to six tiles play at once). Tapping still opens the full film. */
+  const TILE_SM = innerWidth < 760 ? '-sm' : '';
   filmGrid.innerHTML = HEROES.map(h => `<button type="button" class="film__tile" data-h="${h}" aria-label="Play ${HERO_NAMES[h] || 'film'} with sound">
-      <video muted loop playsinline preload="none" poster="https://kebbeadmin.github.io/kebbemedia/media/${h}.jpg" data-src="https://kebbeadmin.github.io/kebbemedia/media/${h}.mp4" aria-hidden="true"></video>
+      <video muted loop playsinline preload="none" poster="https://kebbeadmin.github.io/kebbemedia/media/${h}.jpg" data-src="https://kebbeadmin.github.io/kebbemedia/media/${h}${TILE_SM}.mp4" aria-hidden="true"></video>
       <span class="film__name">${HERO_NAMES[h] || ''}</span><span class="film__play" aria-hidden="true"><svg width="14" height="16" viewBox="0 0 18 20"><path d="M2 1.5v17L17 10z" fill="currentColor"/></svg></span></button>`).join('');
   const tiles = $$('.film__tile', filmGrid);
   const tileIO = new IntersectionObserver(es => es.forEach(e => {
@@ -1445,7 +1469,7 @@ void main(){
     const cap = Math.min(170, innerWidth / Z * .122, innerHeight / Z * .165);
     heroTxt.style.setProperty('--fit', Math.min(cap, 100 * avail / widest * .985).toFixed(2) + 'px');
   }
-  fitHero(); addEventListener('resize', fitHero, { passive: true });
+  fitHero(); onWidth(fitHero);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHero);
   let parts = null; try { parts = KGL.particles($('#philGl')) || null; } catch (e) { parts = null; }
   if (!parts) root.classList.add('no-gl');
@@ -1465,8 +1489,9 @@ void main(){
     const a = RM ? .86 : (introT0 === null ? 0 : .86 * easeOut(clamp((performance.now() - introT0) / 1400)));
     const s = clamp(scrollY / VH);
     const p = clamp(a + s * .16);
-    philStage.style.setProperty('--p', p.toFixed(4));
+    setVar(philStage, '--p', p.toFixed(4));
     if (parts && !(bgArmed && performance.now() - introT0 > 2600)) { parts.pointer(P.nx, P.ny); parts.render(t, dt, p); } /* stop drawing the K once it has faded out */
+    else if (parts && bgArmed) { parts.dispose(); parts = null; stopPointer(); } /* the K has faded out for good: free its WebGL memory and stop tracking touches/tilt for it */
   });
 
   /* ---------------- loader ---------------- */
@@ -1552,16 +1577,20 @@ void main(){
   tik.addEventListener('touchend', holdOff, { passive: true });
   tik.addEventListener('touchcancel', holdOff, { passive: true });
   if (FINE) { tik.addEventListener('pointerenter', holdOn); tik.addEventListener('pointerleave', holdOff); }
+  /* the loop point (half the strip) is measured only when the strip's size changes, not on every frame (reading scrollWidth after other style writes forced a synchronous layout each frame) */
+  let tikHalf = tik.scrollWidth / 2;
+  const measureTik = () => { tikHalf = tik.scrollWidth / 2; };
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(measureTik); ro.observe(tik); const c0 = $('.tik__card', tik); if (c0) ro.observe(c0); } else onWidth(measureTik);
+  addEventListener('load', measureTik);
   subs.add((t, dt) => {
     if (!tk.vis || RM) return;
-    const half = tik.scrollWidth / 2;
-    if (tk.touching) { tk.pos = tik.scrollLeft; return; }
-    if (tk.hold > 0) { tk.hold -= dt; tk.pos = tik.scrollLeft; return; }
+    if (tk.touching) return; /* the finger owns the strip: no reads or writes while it is down */
+    if (tk.hold > 0) { tk.hold -= dt; if (tk.hold <= 0) tk.pos = tik.scrollLeft; return; }
     tk.pos += dt * (innerWidth < 760 ? 26 : 34);
-    if (tk.pos >= half) tk.pos -= half;
+    if (tk.pos >= tikHalf) tk.pos -= tikHalf;
     tik.scrollLeft = tk.pos;
   });
-  tik.addEventListener('scroll', () => { const half = tik.scrollWidth / 2; if (tk.touching || tk.hold > 0) { if (tik.scrollLeft >= half) { tik.scrollLeft -= half; } else if (tik.scrollLeft <= 0) { tik.scrollLeft += half; } } }, { passive: true });
+  tik.addEventListener('scroll', () => { if (tk.touching || tk.hold > 0) { const x = tik.scrollLeft; if (x >= tikHalf) { tik.scrollLeft = x - tikHalf; } else if (x <= 0) { tik.scrollLeft = x + tikHalf; } } }, { passive: true });
 
   /* ---------------- 04 what we do: title -> images on scroll ---------------- */
   /* (no per-frame work here any more: the section is a static band) */
@@ -1570,7 +1599,7 @@ void main(){
   const howScroll = $('#howScroll'), howStage = $('#howStage');
   subs.add(() => {
     const r = howScroll.getBoundingClientRect(); if (r.bottom < 0 || r.top > VH) return;
-    howStage.style.setProperty('--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
+    setVar(howStage, '--p', (RM ? 1 : clamp(-r.top / (r.height - VH))).toFixed(4));
   });
 
   /* ---------------- 06 production ---------------- */
@@ -1672,6 +1701,11 @@ void main(){
       }, RM ? 0 : 280);
     }
     cards.forEach(c => c.addEventListener('click', () => open(+c.dataset.svc, c)));
+    const onScreen = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('on-screen', e.isIntersecting)));
+    cards.forEach(c => onScreen.observe(c));
+    /* the turning gradient square only needs to cover the card's diagonal */
+    const sizeEdge = c => { const e = $('.svc__edge', c); e.style.setProperty('--dg', Math.ceil(Math.hypot(e.offsetWidth, e.offsetHeight)) + 2 + 'px'); };
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(es => es.forEach(x => sizeEdge(x.target))); cards.forEach(c => ro.observe(c)); } else cards.forEach(sizeEdge);
     svm.addEventListener('click', e => {
       if (e.target.closest('[data-close]')) return close();
       const g = e.target.closest('[data-go]'); if (g) return go(+g.dataset.go);
